@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  main:
+    image: node:19
+    environment:
+      ENVIRONMENT: test
+      PORT: 3000
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
+      LOG_LEVEL: debug
+      POSTGRES_URI: postgres://postgres:postgres@postgres/postgres
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/code
+    working_dir: /code
+    ports: ['3000:3000']
+    command: npm run start:dev
+    depends_on: [postgres]
+
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: ['5432:5432']
+
+  redis:
+    image: redis:6-alpine
+    ports: ['6379:6379']
