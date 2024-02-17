@@ -1,23 +1,23 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Contract } from './contract.entity';
+import { Stage } from './stage.entity';
 
 @Entity({ name: 'payments' })
 export class Payment {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
+
+  @Column({ type: 'text', nullable: true })
+  kbk?: string;
+
+  @Column({ type: 'text', nullable: true })
+  paymentMonth?: string;
 
   @Column({ type: 'text' })
-  kbk: string;
+  paymentYear!: string;
 
   @Column({ type: 'text' })
-  paymentMonth: string;
+  paymentSum!: string;
 
-  @Column({ type: 'text' })
-  paymentYear: string;
-
-  @Column({ type: 'text' })
-  paymentSum: string;
-
-  @ManyToOne(() => Contract, (contract) => contract.regNum, { cascade: true })
-  contracts: Array<Contract>;
+  @ManyToOne(() => Stage, (stage) => stage.sid)
+  stage!: Stage;
 }

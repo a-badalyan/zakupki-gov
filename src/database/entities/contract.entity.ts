@@ -6,7 +6,6 @@ import {
   OneToMany,
   ManyToOne,
 } from 'typeorm';
-import { Payment } from './payment.entity';
 import { Organization } from './organization.entity';
 import { Stage } from './stage.entity';
 import { Product } from './product.entity';
@@ -14,47 +13,44 @@ import { Product } from './product.entity';
 @Entity({ name: 'contracts' })
 export class Contract {
   @PrimaryColumn({ type: 'text' })
-  regNum: string;
+  regNum!: string;
 
   @Column({ type: 'text' })
-  name: string;
+  name!: string;
 
   @Column({ type: 'text' })
-  number: string;
+  number!: string;
 
   @Column({ type: 'timestamp' })
-  signDate: Date;
+  signDate!: Date;
 
   @Column({ type: 'decimal' })
-  price: string;
+  price!: string;
 
   @Column({ type: 'timestamp' })
-  executionStartedAt: Date;
+  executionStartedAt!: Date;
 
   @Column({ type: 'timestamp' })
-  executionEndedAt: Date;
+  executionEndedAt!: Date;
 
   @Column({ type: 'timestamp' })
-  placementDate: Date;
+  placementDate!: Date;
 
   @Column({ type: 'timestamp' })
-  publishDate: Date;
+  publishDate!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
-
-  @OneToMany(() => Product, (product) => product.id, { cascade: true })
-  products: Array<Product>;
+  updatedAt!: Date;
 
   @ManyToOne(() => Organization, (customer) => customer.inn, { cascade: true })
-  customer: Organization;
+  customer!: Organization;
 
   @ManyToOne(() => Organization, (supplier) => supplier.inn, { cascade: true })
-  supplier: Organization;
+  supplier!: Organization;
 
-  @OneToMany(() => Payment, (payment) => payment.id, { cascade: true })
-  payments: Array<Payment>;
+  @OneToMany(() => Product, (product) => product.contract, { cascade: true })
+  products!: Array<Product>;
 
-  @OneToMany(() => Stage, (stage) => stage.sid, { cascade: true })
-  stages: Array<Stage>;
+  @OneToMany(() => Stage, (stage) => stage.contract, { cascade: true })
+  stages!: Array<Stage>;
 }

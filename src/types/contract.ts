@@ -23,7 +23,7 @@ export interface IRootObject {
       executionPeriod: IExecutionPeriod;
       deliveryPlaceInfo: IDeliveryPlaceInfo;
       products: IProducts;
-      suppliersInfo: ISuppliersInfo;
+      suppliersInfo?: ISuppliersInfo;
       href: IHref;
       printForm: IPrintForm;
       scanDocuments: IScanDocuments;
@@ -125,9 +125,7 @@ interface IOrganizationTypeCode {
   value: string;
 }
 interface ICustomerAccountsDetails {
-  customerAccountDetails:
-    | ICustomerAccountDetails
-    | ICustomerAccountDetailsItem[];
+  customerAccountDetails: ICustomerAccountDetails | ICustomerAccountDetails[];
 }
 interface ICustomerAccountDetails {
   'ns4:sid': {
@@ -162,6 +160,7 @@ interface ICustomerAccountDetails {
   };
   electronicContractSid?: IElectronicContractSid;
 }
+
 interface IPlacer {
   responsibleOrg: IResponsibleOrg;
   responsibleRole: IResponsibleRole;
@@ -180,7 +179,7 @@ interface IFinances {
 interface IFinancingPlan {
   financeSource: IFinanceSource;
   KBKsChange: IKBKsChange;
-  stages: IStages | IStagesItem[];
+  stages: IStage | IStage[];
   KVRsChange?: IKVRsChange;
 }
 interface IFinanceSource {
@@ -211,16 +210,17 @@ interface IBudgetLevel {
 interface IKBKsChange {
   value: string;
 }
-interface IStages {
+interface IStage {
   guid: IGuid;
   startDate: IStartDate;
   sid: ISid;
   endDate: IEndDate;
-  payments?: IPaymentsItem[] | IPayments;
+  payments?: IPayment[] | IPayment;
   stagePrice?: IStagePrice;
   externalSid?: IExternalSid;
   stageAdvancePaymentSum?: IStageAdvancePaymentSum;
 }
+
 interface IGuid {
   value: string;
 }
@@ -233,12 +233,7 @@ interface ISid {
 interface IEndDate {
   value: string;
 }
-interface IPaymentsItem {
-  KBK2016: IKBK2016;
-  paymentMonth: IPaymentMonth;
-  paymentYear: IPaymentYear;
-  paymentSum: IPaymentSum;
-}
+
 interface IKBK2016 {
   value: string;
 }
@@ -295,7 +290,7 @@ interface IIsWithHoldingUnfulfilledClaimsPenalties {
 }
 interface IExecutionPeriod {
   startDate: IStartDate;
-  stages: IStages | IStagesItem[];
+  stages: IStage | IStage[];
   endDate: IEndDate;
 }
 interface IStagePrice {
@@ -377,37 +372,10 @@ interface INs4ByKLADRInfoItem {
   };
 }
 interface IProducts {
-  product: IProductItem[] | IProduct;
+  product: IProduct[] | IProduct;
   quantityUndefined: IQuantityUndefined;
 }
-interface IProductItem {
-  sid: ISid;
-  guid: IGuid;
-  indexNum: IIndexNum;
-  OKPD2?: IOKPD2;
-  name: IName;
-  hierarchyType: IHierarchyType;
-  type: IType;
-  OKEI: IOKEI;
-  price: IPrice;
-  volumeSpecifyingMethod: IVolumeSpecifyingMethod;
-  volumeTextForm?: IVolumeTextForm;
-  sum?: ISum;
-  VATRate: IVATRate;
-  improvedProductReplacement: IImprovedProductReplacement;
-  purchaseObjectSid?: IPurchaseObjectSid;
-  externalSid?: IExternalSid;
-  KTRU?: IKTRU;
-  quantity?: IQuantity;
-  originCountry?:
-    | IOriginCountry
-    | (IOriginCountry | IOriginCountryItem[])
-    | IOriginCountryItem[];
-  isMedicalProduct?: IIsMedicalProduct;
-  medicalProductInfo?: IMedicalProductInfo;
-  drugPurchaseObjectInfo?: IDrugPurchaseObjectInfo;
-  electronicContractObjectSid?: IElectronicContractObjectSid;
-}
+
 interface IIndexNum {
   value: string;
 }
@@ -457,7 +425,7 @@ interface IQuantityUndefined {
   value: string;
 }
 interface ISuppliersInfo {
-  supplierInfo: ISupplierInfo | ISupplierInfoItem[];
+  supplierInfo: ISupplierInfo | ISupplierInfo[];
 }
 export interface ISupplierInfo {
   legalEntityRF?: ILegalEntityRF;
@@ -465,6 +433,7 @@ export interface ISupplierInfo {
   contractorRegistryNum?: IContractorRegistryNum;
   individualPersonRFIndEntr?: IIndividualPersonRFIndEntr;
 }
+
 interface ILegalEntityRF {
   EGRULInfo: IEGRULInfo;
   otherInfo: IOtherInfo;
@@ -484,7 +453,7 @@ interface IEGRULInfo {
   OGRN: IOGRN;
   legalForm?: ILegalForm;
   fullName: IFullName;
-  shortName: IShortName;
+  shortName?: IShortName;
   INN: IINN;
   KPP: IKPP;
   address: IAddress;
@@ -603,8 +572,8 @@ interface IDocRegNumber {
   value: string;
 }
 interface IScanDocuments {
-  attachment?: IAttachment | IAttachmentItem[];
-  CPEPAttachment?: ICPEPAttachment | ICPEPAttachmentItem[];
+  attachment?: IAttachment | IAttachment[];
+  CPEPAttachment?: ICPEPAttachment | ICPEPAttachment[];
 }
 interface IAttachment {
   publishedContentId: IPublishedContentId;
@@ -614,6 +583,7 @@ interface IAttachment {
   url: IUrl;
   cryptoSigns: ICryptoSigns;
 }
+
 interface IPublishedContentId {
   value: string;
 }
@@ -651,16 +621,9 @@ interface IDocumentDate {
   value: string;
 }
 interface IAttachments {
-  attachment: IAttachmentItem[] | IAttachment;
+  attachment: IAttachment[] | IAttachment;
 }
-interface IAttachmentItem {
-  publishedContentId: IPublishedContentId;
-  fileName: IFileName;
-  docDescription: IDocDescription;
-  docRegNumber: IDocRegNumber;
-  url: IUrl;
-  cryptoSigns: ICryptoSigns;
-}
+
 interface ICurrentContractStage {
   value: string;
 }
@@ -703,13 +666,14 @@ interface IFundsBudgetLevel {
 interface IExternalSid {
   value: string;
 }
-interface IPayments {
+interface IPayment {
   KBK2016?: IKBK2016;
   paymentYear: IPaymentYear;
   paymentSum: IPaymentSum;
   paymentMonth?: IPaymentMonth;
   KVR?: IKVR;
 }
+
 export interface IProtocolDate {
   value: string;
 }
@@ -739,7 +703,7 @@ interface IDocNumberNotPublishedOnEIS {
 interface IGuaranteeAmount {
   value: string;
 }
-interface IProduct {
+export interface IProduct {
   purchaseObjectSid?: IPurchaseObjectSid;
   sid: ISid;
   externalSid?: IExternalSid;
@@ -759,11 +723,12 @@ interface IProduct {
   OKPD2?: IOKPD2;
   volumeTextForm?: IVolumeTextForm;
   drugPurchaseObjectInfo?: IDrugPurchaseObjectInfo;
-  originCountry?: IOriginCountry | IOriginCountryItem[];
+  originCountry?: IOriginCountry | IOriginCountry[];
   isMedicalProduct?: IIsMedicalProduct;
   medicalProductInfo?: IMedicalProductInfo;
   electronicContractObjectSid?: IElectronicContractObjectSid;
 }
+
 interface IPurchaseObjectSid {
   value: string;
 }
@@ -875,6 +840,7 @@ interface ICPEPAttachment {
   url: IUrl;
   cryptoSigns: ICryptoSigns;
 }
+
 interface IErrorCorrection {
   description: IDescription;
 }
@@ -906,13 +872,9 @@ interface IRaiting {
   value: string;
 }
 export interface ISt14Info {
-  NPAsInfo: INPAsInfoItem[] | INPAsInfo;
+  NPAsInfo: INPAsInfo[] | INPAsInfo;
 }
-interface INPAsInfoItem {
-  NPAInfo: INPAInfo;
-  requirementType: IRequirementType;
-  requirementName: IRequirementName;
-}
+
 interface INPAInfo {
   'ns2:code': {
     value: string;
@@ -972,7 +934,7 @@ interface IMedicalProductName {
 interface ICharacteristics {
   characteristicsUsingTextForm?:
     | ICharacteristicsUsingTextForm
-    | ICharacteristicsUsingTextFormItem[];
+    | ICharacteristicsUsingTextForm[];
   characteristicsUsingReferenceInfo?:
     | ICharacteristicsUsingReferenceInfoItem[]
     | ICharacteristicsUsingReferenceInfo;
@@ -1005,15 +967,7 @@ interface IStatusInfo {
 export interface IIsDDU {
   value: string;
 }
-interface IStagesItem {
-  externalSid?: IExternalSid;
-  guid: IGuid;
-  startDate: IStartDate;
-  sid: ISid;
-  endDate: IEndDate;
-  payments: IPayments | IPaymentsItem[];
-  stagePrice?: IStagePrice;
-}
+
 export interface IAdvancePaymentSum {
   sumInPercents: ISumInPercents;
   priceValue: IPriceValue;
@@ -1027,10 +981,7 @@ interface IPriceValue {
 interface IStageAdvancePaymentSum {
   priceValue: IPriceValue;
 }
-interface ISupplierInfoItem {
-  legalEntityRF: ILegalEntityRF;
-  supplierAccountsDetails?: ISupplierAccountsDetails;
-}
+
 interface ILegalEntityRFSubdivision {
   isSubdivision: IIsSubdivision;
   EGRULInfo: IEGRULInfo;
@@ -1101,36 +1052,7 @@ interface IMinMathNotation {
 interface IMin {
   value: string;
 }
-interface ICustomerAccountDetailsItem {
-  'ns4:sid': {
-    value: string;
-  };
-  'ns4:guid': {
-    value: string;
-  };
-  'ns4:accountType': {
-    value: string;
-  };
-  'ns4:personalAccountNumber': {
-    value: string;
-  };
-  'ns4:creditOrgName': {
-    value: string;
-  };
-  'ns4:detailsCreditOrgText': {
-    value: string;
-  };
-  'ns4:bankAccountNumber': {
-    value: string;
-  };
-  'ns4:bik': {
-    value: string;
-  };
-  'ns4:corrAccountNumber': {
-    value: string;
-  };
-  electronicContractSid?: IElectronicContractSid;
-}
+
 interface IKVRsChange {
   value: string;
 }
@@ -1176,9 +1098,7 @@ interface IDosageUserName {
   value: string;
 }
 interface IPositionsTradeName {
-  positionTradeName:
-    | IPositionTradeName
-    | (IPositionTradeName | IPositionTradeNameItem[]);
+  positionTradeName: IPositionTradeName | IPositionTradeName[];
 }
 interface IPositionTradeName {
   guid: IGuid;
@@ -1296,20 +1216,13 @@ interface IMedicamentalFormNormName {
 interface IIsZNVLP {
   value: string;
 }
-interface IOriginCountryItem {
-  countryCode: ICountryCode;
-  countryFullName: ICountryFullName;
-}
+
 interface INPAsInfo {
   NPAInfo: INPAInfo;
   requirementType: IRequirementType;
   requirementName: IRequirementName;
 }
-interface ICharacteristicsUsingTextFormItem {
-  name: IName;
-  type: IType;
-  values: IValues;
-}
+
 interface IValueSet {
   concreteValue: IConcreteValue;
 }
@@ -1340,22 +1253,7 @@ interface IOGRNIP {
 interface IIsIP {
   value: string;
 }
-interface IPositionTradeNameItem {
-  guid: IGuid;
-  sid: ISid;
-  positionTradeNameExternalCode: IPositionTradeNameExternalCode;
-  drugCode: IDrugCode;
-  tradeInfo: ITradeInfo;
-  certificateNumber: ICertificateNumber;
-  medicamentalFormInfo: IMedicamentalFormInfo;
-  dosageInfo: IDosageInfo;
-  certificateKeeperName: ICertificateKeeperName;
-  manufacturerInfo: IManufacturerInfo;
-  packagingsInfo: IPackagingsInfo;
-  MNNNormName: IMNNNormName;
-  dosageNormName: IDosageNormName;
-  medicamentalFormNormName: IMedicamentalFormNormName;
-}
+
 interface IProvidedPeriod {
   otherPeriodText: IOtherPeriodText;
 }
@@ -1387,14 +1285,7 @@ interface IElectronicContractSid {
 interface IElectronicContractObjectSid {
   value: string;
 }
-interface ICPEPAttachmentItem {
-  publishedContentId: IPublishedContentId;
-  fileName: IFileName;
-  docDescription: IDocDescription;
-  docRegNumber: IDocRegNumber;
-  url: IUrl;
-  cryptoSigns: ICryptoSigns;
-}
+
 interface IAmountsReducedByTaxes {
   value: string;
 }

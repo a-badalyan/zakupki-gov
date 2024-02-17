@@ -5,40 +5,40 @@ import { Stage } from './stage.entity';
 @Entity({ name: 'documents' })
 export class Document {
   @PrimaryColumn({ type: 'text' })
-  sid: string;
+  sid!: string;
 
   @Column({ type: 'text' })
-  currency: string;
+  currency!: string;
 
   @Column({ type: 'text' })
-  paid: string;
+  paid!: string;
 
   @Column({ type: 'timestamp' })
-  startDate: Date;
+  startDate!: Date;
 
   @Column({ type: 'timestamp' })
-  endDate: Date;
+  endDate!: Date;
 
   @Column({ type: 'jsonb' })
-  documentBody: DocAcceptance | PayDoc;
+  documentBody!: DocAcceptance | PayDoc;
 
   @Column({ type: 'boolean' })
-  finalStageExecution: boolean;
+  finalStageExecution!: boolean;
 
   @Column({ type: 'text' })
   quantity?: string;
 
   @Column({ type: 'timestamp' })
-  publishDate: Date;
+  publishDate!: Date;
 
   @Column({ type: 'text' })
-  url: string;
+  url!: string;
 
   @OneToOne(() => Product, (product) => product.id, { cascade: true })
-  product: Product;
+  product!: Product;
 
   @ManyToOne(() => Stage, (stage) => stage.sid, { cascade: true })
-  stage: Stage;
+  stage!: Stage;
 }
 
 export interface PayDoc {

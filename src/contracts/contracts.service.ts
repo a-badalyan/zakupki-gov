@@ -16,7 +16,14 @@ export class ContractsService {
   // }
 
   async findAll(): Promise<Array<Contract>> {
-    return this.contractRepository.find();
+    return this.contractRepository.find({
+      relations: {
+        customer: true,
+        supplier: true,
+        stages: { payments: true },
+        products: true,
+      },
+    });
   }
 
   async findOne(regNum: string): Promise<Contract | null> {

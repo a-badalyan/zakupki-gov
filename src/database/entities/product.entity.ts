@@ -5,25 +5,25 @@ import { Document } from './document.entity';
 @Entity({ name: 'products' })
 export class Product {
   @PrimaryColumn()
-  id: string;
+  id!: string;
 
   @Column({ type: 'text' })
-  okpd2code: string;
+  okpd2code!: string;
 
   @Column({ type: 'text' })
-  okpd2name: string;
+  okpd2name!: string;
 
   @Column({ type: 'text' })
-  name: string;
+  name!: string;
+
+  @Column({ type: 'text', nullable: true })
+  type?: string;
 
   @Column({ type: 'text' })
-  type: string;
-
-  @Column({ type: 'text' })
-  okei: string;
+  okei!: string;
 
   @Column({ type: 'decimal' })
-  price: string;
+  price!: string;
 
   @Column({ type: 'decimal', nullable: true })
   quantity?: string;
@@ -31,9 +31,9 @@ export class Product {
   @Column({ type: 'decimal', nullable: true })
   sum?: string;
 
-  @ManyToOne(() => Contract, (contract) => contract.regNum, { cascade: true })
-  contract: Contract;
+  @ManyToOne(() => Contract, (contract) => contract.regNum)
+  contract!: Contract;
 
   @OneToOne(() => Document, (document) => document.sid, { cascade: true })
-  document: Document;
+  document!: Document;
 }

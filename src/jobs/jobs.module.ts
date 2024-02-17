@@ -8,7 +8,13 @@ import { DownloadFileProcessor } from './download-file.processor';
 import { FileDownloadedProcessor } from './file-downloaded.processor';
 import { ExtractFileProcessor } from './extract-file.processor';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Contract, Organization } from '@app/database/entities';
+import {
+  Contract,
+  Organization,
+  Payment,
+  Product,
+  Stage,
+} from '@app/database/entities';
 
 @Module({
   imports: [
@@ -18,7 +24,7 @@ import { Contract, Organization } from '@app/database/entities';
       { name: Queues.FILE_DOWNLOADED },
       { name: Queues.EXTRACT_FILE },
     ),
-    TypeOrmModule.forFeature([Contract, Organization]),
+    TypeOrmModule.forFeature([Contract, Organization, Product, Payment, Stage]),
   ],
   providers: [
     CurrentContractsProcessor,

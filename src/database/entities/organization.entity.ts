@@ -4,18 +4,18 @@ import { Contract } from './contract.entity';
 @Entity({ name: 'organizations' })
 export class Organization {
   @PrimaryColumn({ type: 'text' })
-  inn: string;
+  inn!: string;
+
+  @Column({ type: 'text', nullable: true })
+  kpp?: string;
 
   @Column({ type: 'text' })
-  kpp: string;
-
-  @Column({ type: 'text' })
-  fullName: string;
+  fullName!: string;
 
   @Column({ type: 'text', nullable: true })
   @Index()
   shortName?: string;
 
   @OneToMany(() => Contract, (contract) => contract.regNum, { cascade: true })
-  contracts: Array<Contract>;
+  contracts!: Array<Contract>;
 }
