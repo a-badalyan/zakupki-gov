@@ -7,31 +7,31 @@ export class Document {
   @PrimaryColumn({ type: 'text' })
   sid: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   currency: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   paid: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   startDate: Date;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   endDate: Date;
 
-  @Column({ type: 'jsonb', nullable: false })
+  @Column({ type: 'jsonb' })
   documentBody: DocAcceptance | PayDoc;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean' })
   finalStageExecution: boolean;
 
   @Column({ type: 'text' })
   quantity?: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   publishDate: Date;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   url: string;
 
   @OneToOne(() => Product, (product) => product.id, { cascade: true })

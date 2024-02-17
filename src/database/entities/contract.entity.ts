@@ -16,38 +16,32 @@ export class Contract {
   @PrimaryColumn({ type: 'text' })
   regNum: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   number: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   signDate: Date;
 
-  @Column({ type: 'decimal', nullable: false })
+  @Column({ type: 'decimal' })
   price: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   executionStartedAt: Date;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   executionEndedAt: Date;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   placementDate: Date;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp' })
   publishDate: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @Column({ type: 'text', nullable: false })
-  supplierInn: string;
-
-  @Column({ type: 'text', nullable: false })
-  customerInn: string;
 
   @OneToMany(() => Product, (product) => product.id, { cascade: true })
   products: Array<Product>;

@@ -6,13 +6,13 @@ export class Organization {
   @PrimaryColumn({ type: 'text' })
   inn: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   kpp: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   fullName: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   @Index()
   shortName?: string;
 

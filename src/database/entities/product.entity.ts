@@ -7,36 +7,33 @@ export class Product {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column({ type: 'text' })
   okpd2code: string;
 
-  @Column()
+  @Column({ type: 'text' })
   okpd2name: string;
 
-  @Column()
+  @Column({ type: 'text' })
   name: string;
 
-  @Column()
+  @Column({ type: 'text' })
   type: string;
 
-  @Column()
+  @Column({ type: 'text' })
   okei: string;
 
-  @Column()
+  @Column({ type: 'decimal' })
   price: string;
 
-  @Column()
+  @Column({ type: 'decimal', nullable: true })
   quantity?: string;
 
-  @Column()
+  @Column({ type: 'decimal', nullable: true })
   sum?: string;
-
-  @Column()
-  contractRegNum: string;
 
   @ManyToOne(() => Contract, (contract) => contract.regNum, { cascade: true })
   contract: Contract;
 
   @OneToOne(() => Document, (document) => document.sid, { cascade: true })
-  document?: Document;
+  document: Document;
 }

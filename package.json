@@ -12,10 +12,13 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "ts-node src/index.ts",
-    "start:dev": "nest start --watch",
+    "start:dev": "npm run migrate:run-dev && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix"
+    "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
+    "migrate:generate": "typeorm-ts-node-commonjs migration:generate -d src/typeorm.config.ts src/migrations/auto",
+    "migrate:run-dev": "typeorm-ts-node-commonjs migration:run -d src/typeorm.config.ts",
+    "migrate:run": "typeorm-ts-node-commonjs migration:run -d src/typeorm.config.js"
   },
   "dependencies": {
     "@nestjs/bull": "^10.0.1",
@@ -30,7 +33,7 @@
     "bullmq": "^4.17.0",
     "pg": "^8.4.0",
     "typeorm": "0.3.19",
-    "xml2js": "^0.6.2"
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

@@ -7,16 +7,16 @@ export class Stage {
   @PrimaryColumn({ type: 'text' })
   sid: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   startDate: Date;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   endDate: Date;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   stagePrice: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   stageAdvancePaymentSum: string;
 
   @ManyToOne(() => Contract, (contract) => contract.regNum, { cascade: true })

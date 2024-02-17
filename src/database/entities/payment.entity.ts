@@ -6,16 +6,16 @@ export class Payment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   kbk: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   paymentMonth: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   paymentYear: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text' })
   paymentSum: string;
 
   @ManyToOne(() => Contract, (contract) => contract.regNum, { cascade: true })

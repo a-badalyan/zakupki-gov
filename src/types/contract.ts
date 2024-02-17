@@ -1,421 +1,1468 @@
-export interface Contract {
-  id: string;
-  placementDate: Date;
-  publishDate: Date;
-  versionNumber: string;
-  foundation: Foundation;
-  'conclusionContractSt95Ch17.1': boolean;
-  customer: Customer;
-  placer: Placer;
-  finances: Finances;
-  protocolDate: Date;
-  documentBase: string;
-  documentCode: string;
-  signDate: Date;
-  regNum: string;
-  number: string;
-  contractSubject: string;
-  isOptimyStart: boolean;
-  contractLifeCycle: boolean;
-  isResidentialPremisesPurchase: boolean;
-  priceInfo: PriceInfo;
-  subContractorsSum: SubContractorsSum;
-  executionPeriod: ExecutionPeriod;
-  enforcement: Enforcement;
-  qualityGuaranteeInfo: QualityGuaranteeInfo;
-  deliveryPlaceInfo: DeliveryPlaceInfo;
-  products: Products;
-  suppliersInfo: SuppliersInfo;
-  href: string;
-  printForm: PrintForm;
-  scanDocuments: ScanDocuments;
-  singleSupplierP25Part1St93Documents: SingleSupplierP25Part1St93Documents;
-  attachments: Attachments;
-  modification: Modification;
-  currentContractStage: string;
-  okpd2okved2: boolean;
-  isUnilateralRefusal: boolean;
-  _schemeVersion: string;
-  __prefix: string;
+export interface IRootObject {
+  'ns3:export': {
+    'ns3:contract': {
+      id: IId;
+      placementDate: IPlacementDate;
+      publishDate: IPublishDate;
+      versionNumber: IVersionNumber;
+      foundation: IFoundation;
+      'conclusionContractSt95Ch17.1': {
+        value: string;
+      };
+      customer: ICustomer;
+      placer: IPlacer;
+      finances: IFinances;
+      signDate: ISignDate;
+      regNum: IRegNum;
+      number: INumber;
+      contractSubject: IContractSubject;
+      isOptimyStart: IIsOptimyStart;
+      contractLifeCycle: IContractLifeCycle;
+      isResidentialPremisesPurchase: IIsResidentialPremisesPurchase;
+      priceInfo: IPriceInfo;
+      executionPeriod: IExecutionPeriod;
+      deliveryPlaceInfo: IDeliveryPlaceInfo;
+      products: IProducts;
+      suppliersInfo: ISuppliersInfo;
+      href: IHref;
+      printForm: IPrintForm;
+      scanDocuments: IScanDocuments;
+      modification: IModification;
+      currentContractStage: ICurrentContractStage;
+      okpd2okved2: IOkpd2okved2;
+      isUnilateralRefusal: IIsUnilateralRefusal;
+    };
+  };
 }
-
-export interface Attachments {
-  attachment: Attachment[];
+interface IId {
+  value: string;
 }
-
-export interface Attachment {
-  publishedContentId: string;
-  fileName: string;
-  docDescription: string;
-  docRegNumber: string;
-  url: string;
-  cryptoSigns: AttachmentCryptoSigns;
+interface IPlacementDate {
+  value: string;
 }
-
-export interface AttachmentCryptoSigns {
-  signature: string[];
+interface IPublishDate {
+  value: string;
 }
-
-export interface Customer {
-  regNum: string;
-  consRegistryNum: string;
-  fullName: string;
-  shortName: string;
-  inn: string;
-  kpp: string;
-  legalForm: LegalForm;
-  OKPO: string;
-  customerCode: string;
-  organizationTypeCode: string;
-  customerAccountsDetails: CustomerAccountsDetails;
+interface IVersionNumber {
+  value: string;
 }
-
-export interface CustomerAccountsDetails {
-  customerAccountDetails: ErAccountDetails;
+interface IFoundation {
+  fcsOrder: IFcsOrder;
 }
-
-export interface ErAccountDetails {
-  sid: DeliveryPlace;
-  guid: DeliveryPlace;
-  accountType: DeliveryPlace;
-  personalAccountNumber?: DeliveryPlace;
-  creditOrgName: DeliveryPlace;
-  bankAccountNumber: DeliveryPlace;
-  bik: DeliveryPlace;
-  corrAccountNumber: DeliveryPlace;
-  counterpartyName?: DeliveryPlace;
+interface IFcsOrder {
+  singleCustomer?: ISingleCustomer;
+  order?: IOrder;
 }
-
-export interface DeliveryPlace {
-  __prefix: Prefix;
-  __text: string;
+interface ISingleCustomer {
+  reason: IReason;
+  purchaseCode?: IPurchaseCode;
+  tenderPlan2020Info?: ITenderPlan2020Info;
+  attachments?: IAttachments;
 }
-
-export enum Prefix {
-  Ns2 = 'ns2',
-  Ns4 = 'ns4',
+interface IReason {
+  code: ICode;
+  name: IName;
 }
-
-export interface LegalForm {
-  code: string;
-  singularName: string;
+interface ICode {
+  value: string;
 }
-
-export interface DeliveryPlaceInfo {
-  byKLADRInfo: ByKLADRInfo;
+interface IName {
+  value: string;
 }
-
-export interface ByKLADRInfo {
-  KLADRInfo: KLADRInfo;
-  deliveryPlace: DeliveryPlace;
-  __prefix: Prefix;
+interface IPurchaseCode {
+  value: string;
 }
-
-export interface KLADRInfo {
-  kladrCode: DeliveryPlace;
-  fullName: DeliveryPlace;
-  __prefix: Prefix;
+interface ITenderPlan2020Info {
+  'ns4:plan2020Number': {
+    value: string;
+  };
+  'ns4:position2020Number': {
+    value: string;
+  };
 }
-
-export interface Enforcement {
-  bankGuarantee: BankGuarantee;
+interface ICustomer {
+  regNum: IRegNum;
+  consRegistryNum: IConsRegistryNum;
+  fullName: IFullName;
+  inn: IInn;
+  kpp: IKpp;
+  legalForm: ILegalForm;
+  OKPO: IOKPO;
+  customerCode: ICustomerCode;
+  organizationTypeCode: IOrganizationTypeCode;
+  customerAccountsDetails?: ICustomerAccountsDetails;
+  shortName?: IShortName;
 }
-
-export interface BankGuarantee {
-  regNumberNotPublishedOnEIS: boolean;
-  docNumberNotPublishedOnEIS: boolean;
-  currency: Currency;
-  guaranteeAmount: string;
+interface IRegNum {
+  value: string;
 }
-
-export interface Currency {
-  code: string;
-  name: string;
+interface IConsRegistryNum {
+  value: string;
 }
-
-export interface ExecutionPeriod {
-  startDate: Date;
-  stages: ExecutionPeriodStages;
-  endDate: Date;
+interface IFullName {
+  value: string;
 }
-
-export interface ExecutionPeriodStages {
-  sid: string;
-  guid: string;
-  startDate: Date;
-  endDate: Date;
-  stagePrice: string;
-  stageAdvancePaymentSum: string;
+interface IInn {
+  value: string;
 }
-
-export interface Finances {
-  financingPlan: FinancingPlan;
+interface IKpp {
+  value: string;
 }
-
-export interface FinancingPlan {
-  financeSource: FinanceSource;
-  KBKsChange: boolean;
-  stages: Array<FinancingPlanStage>;
+interface ILegalForm {
+  code: ICode;
+  singularName: ISingularName;
 }
-
-export interface FinanceSource {
-  budgetFunds: BudgetFunds;
+interface ISingularName {
+  value: string;
 }
-
-export interface BudgetFunds {
-  isBudgetFunds: boolean;
-  budget: Currency;
-  OKTMO: Currency;
-  budgetLevel: string;
+interface IOKPO {
+  value: string;
 }
-
-export interface FinancingPlanStage {
-  guid: string;
-  startDate: Date;
-  sid: string;
-  endDate: Date;
-  payments: Payments;
+interface ICustomerCode {
+  value: string;
 }
-
-export interface Payments {
-  KBK2016: string;
-  paymentMonth: string;
-  paymentYear: string;
-  paymentSum: string;
+interface IOrganizationTypeCode {
+  value: string;
 }
-
-export interface Foundation {
-  fcsOrder: FCSOrder;
+interface ICustomerAccountsDetails {
+  customerAccountDetails:
+    | ICustomerAccountDetails
+    | ICustomerAccountDetailsItem[];
 }
-
-export interface FCSOrder {
-  order: Order;
+interface ICustomerAccountDetails {
+  'ns4:sid': {
+    value: string;
+  };
+  'ns4:guid': {
+    value: string;
+  };
+  'ns4:accountType': {
+    value: string;
+  };
+  'ns4:personalAccountNumber': {
+    value: string;
+  };
+  'ns4:creditOrgName': {
+    value: string;
+  };
+  'ns4:detailsCreditOrgText': {
+    value: string;
+  };
+  'ns4:bankAccountNumber': {
+    value: string;
+  };
+  'ns4:bik': {
+    value: string;
+  };
+  'ns4:corrAccountNumber': {
+    value: string;
+  };
+  'ns4:externalSid'?: {
+    value: string;
+  };
+  electronicContractSid?: IElectronicContractSid;
 }
-
-export interface Order {
-  notificationNumber: string;
-  lotNumber: string;
-  placing: string;
-  singleCustomer: SingleCustomer;
-  placingSingleCustomerText: string;
-  purchaseCode: string;
-  contractProjectNumber: string;
+interface IPlacer {
+  responsibleOrg: IResponsibleOrg;
+  responsibleRole: IResponsibleRole;
 }
-
-export interface SingleCustomer {
-  reason: Currency;
+interface IResponsibleOrg {
+  regNum: IRegNum;
+  consRegistryNum: IConsRegistryNum;
+  fullName: IFullName;
 }
-
-export interface Modification {
-  contractChange: ContractChange;
-  attachments: Attachments;
+interface IResponsibleRole {
+  value: string;
 }
-
-export interface ContractChange {
-  reason: Currency;
-  document: Document;
+interface IFinances {
+  financingPlan?: IFinancingPlan;
 }
-
-export interface Document {
-  code: string;
-  name: string;
-  base: string;
-  documentDate: Date;
+interface IFinancingPlan {
+  financeSource: IFinanceSource;
+  KBKsChange: IKBKsChange;
+  stages: IStages | IStagesItem[];
+  KVRsChange?: IKVRsChange;
 }
-
-export interface Placer {
-  responsibleOrg: ResponsibleOrg;
-  responsibleRole: string;
+interface IFinanceSource {
+  budgetFunds?: IBudgetFunds;
+  extrabudgetFunds?: IExtrabudgetFunds;
 }
-
-export interface ResponsibleOrg {
-  regNum: string;
-  consRegistryNum: string;
-  fullName: string;
+interface IBudgetFunds {
+  isBudgetFunds: IIsBudgetFunds;
+  budget: IBudget;
+  OKTMO: IOKTMO;
+  budgetLevel: IBudgetLevel;
+  fundsBudgetLevel?: IFundsBudgetLevel;
 }
-
-export interface PriceInfo {
-  price: string;
-  priceType: string;
-  currency: Currency;
-  priceVAT: string;
-  amountsReducedByTaxes: boolean;
-  isWithHoldingUnfulfilledClaimsPenalties: boolean;
+interface IIsBudgetFunds {
+  value: string;
 }
-
-export interface PrintForm {
-  url: string;
-  docRegNumber: string;
+interface IBudget {
+  code: ICode;
+  name: IName;
 }
-
-export interface Products {
-  product: Product;
-  quantityUndefined: boolean;
+interface IOKTMO {
+  code: ICode;
+  name: IName;
 }
-
-export interface Product {
-  purchaseObjectSid: string;
-  sid: string;
-  guid: string;
-  indexNum: string;
-  OKPD2: Currency;
-  name: string;
-  hierarchyType: string;
-  type: string;
-  OKEI: OKEI;
-  price: string;
-  volumeSpecifyingMethod: string;
-  quantity: string;
-  sum: string;
-  VATRate: string;
-  improvedProductReplacement: boolean;
+interface IBudgetLevel {
+  value: string;
 }
-
-export interface OKEI {
-  code: string;
-  nationalCode: string;
-  trueNationalCode: string;
-  fullName: string;
-  nationalName: string;
+interface IKBKsChange {
+  value: string;
 }
-
-export interface QualityGuaranteeInfo {
-  notPublishedOnEIS: boolean;
-  warrantyReqsText: string;
-  manufacturerWarrantyReqsText: string;
-  isQAEnsuramceRequired: boolean;
+interface IStages {
+  guid: IGuid;
+  startDate: IStartDate;
+  sid: ISid;
+  endDate: IEndDate;
+  payments?: IPaymentsItem[] | IPayments;
+  stagePrice?: IStagePrice;
+  externalSid?: IExternalSid;
+  stageAdvancePaymentSum?: IStageAdvancePaymentSum;
 }
-
-export interface ScanDocuments {
-  CPEPAttachment: CPEPAttachment;
+interface IGuid {
+  value: string;
 }
-
-export interface CPEPAttachment {
-  publishedContentId: string;
-  fileName: string;
-  docDescription: string;
-  docRegNumber: string;
-  url: string;
-  cryptoSigns: CPEPAttachmentCryptoSigns;
+interface IStartDate {
+  value: string;
 }
-
-export interface CPEPAttachmentCryptoSigns {
-  signature: Signature[];
+interface ISid {
+  value: string;
 }
-
-export interface Signature {
-  _type: string;
-  __text: string;
+interface IEndDate {
+  value: string;
 }
-
-export interface SingleSupplierP25Part1St93Documents {
-  attachment: Attachment;
+interface IPaymentsItem {
+  KBK2016: IKBK2016;
+  paymentMonth: IPaymentMonth;
+  paymentYear: IPaymentYear;
+  paymentSum: IPaymentSum;
 }
-
-export interface SubContractorsSum {
-  sumInPercents: string;
-  priceValueRUR: string;
-  subContractors: SubContractors;
+interface IKBK2016 {
+  value: string;
 }
-
-export interface SubContractors {
-  subContractor: SubContractor[];
+interface IPaymentMonth {
+  value: string;
 }
-
-export interface SubContractor {
-  legalEntityRF?: SubContractorLegalEntityRF;
-  individualBusinessmanRF?: IndividualBusinessmanRF;
+interface IPaymentYear {
+  value: string;
 }
-
-export interface IndividualBusinessmanRF {
-  lastName: string;
-  firstName: string;
-  middleName: string;
-  INN: string;
-  registrationDate: Date;
-  status: string;
-  ERSMSPInclusionDate: Date;
-  address: string;
-  subContractInfo: SubContractInfo;
-  subPurchaseObjectsInfo: SubPurchaseObjectsInfo;
+interface IPaymentSum {
+  value: string;
 }
-
-export interface SubContractInfo {
-  subContractDate: Date;
-  subContractNumber: string;
-  subContractSubject: string;
-  contractPriceSpecify: string;
-  subContractPriceInfo: SubContractPriceInfo;
+interface ISignDate {
+  value: string;
 }
-
-export interface SubContractPriceInfo {
-  price: string;
-  currency: Currency;
+interface INumber {
+  value: string;
 }
-
-export interface SubPurchaseObjectsInfo {
-  subPurchaseObjectInfo: SubPurchaseObjectInfo;
+interface IContractSubject {
+  value: string;
 }
-
-export interface SubPurchaseObjectInfo {
-  OKPD2: Currency;
-  name: string;
-  OKEI: OKEI;
-  price: string;
-  quantity: string;
-  sum: string;
-  VATRate: string;
+interface IIsOptimyStart {
+  value: string;
 }
-
-export interface SubContractorLegalEntityRF {
-  legalForm: LegalForm;
-  fullName: string;
-  firmName: string;
-  INN: string;
-  KPP: string;
-  registrationDate: Date;
-  status: string;
-  ERSMSPInclusionDate: Date;
-  address: string;
-  subContractInfo: SubContractInfo;
-  subPurchaseObjectsInfo: SubPurchaseObjectsInfo;
+interface IContractLifeCycle {
+  value: string;
 }
-
-export interface SuppliersInfo {
-  supplierInfo: SupplierInfo;
+interface IIsResidentialPremisesPurchase {
+  value: string;
 }
-
-export interface SupplierInfo {
-  legalEntityRF: SupplierInfoLegalEntityRF;
-  supplierAccountsDetails: SupplierAccountsDetails;
-  contractorRegistryNum: string;
+interface IPriceInfo {
+  price: IPrice;
+  priceType: IPriceType;
+  currency: ICurrency;
+  priceVAT: IPriceVAT;
+  isWithHoldingUnfulfilledClaimsPenalties: IIsWithHoldingUnfulfilledClaimsPenalties;
+  amountsReducedByTaxes?: IAmountsReducedByTaxes;
 }
-
-export interface SupplierInfoLegalEntityRF {
-  EGRULInfo: EGRULInfo;
-  otherInfo: OtherInfo;
+interface IPrice {
+  value: string;
 }
-
-export interface EGRULInfo {
-  OGRN: string;
-  legalForm: LegalForm;
-  fullName: string;
-  shortName: string;
-  INN: string;
-  KPP: string;
-  address: string;
+interface IPriceType {
+  value: string;
 }
-
-export interface OtherInfo {
-  statusInfo: StatusInfo;
-  contactEMail: string;
-  contactPhone: string;
+interface ICurrency {
+  code: ICode;
+  name: IName;
 }
-
-export interface StatusInfo {
-  code: DeliveryPlace;
+interface IPriceVAT {
+  value: string;
 }
+interface IIsWithHoldingUnfulfilledClaimsPenalties {
+  value: string;
+}
+interface IExecutionPeriod {
+  startDate: IStartDate;
+  stages: IStages | IStagesItem[];
+  endDate: IEndDate;
+}
+interface IStagePrice {
+  value: string;
+}
+interface IDeliveryPlaceInfo {
+  "'ns4:byKLADRInfo'"?:
+    | INs4ByKLADRInfoItem[]
+    | {
+        'ns4:deliveryPlace': {
+          value: string;
+        };
+      }
+    | {
+        'ns4:countryInfo': {
+          'ns2:countryCode': {
+            value: string;
+          };
+          'ns2:countryFullName': {
+            value: string;
+          };
+        };
+        'ns4:deliveryPlace': {
+          value: string;
+        };
+      }
+    | {
+        'ns4:KLADRInfo': {
+          'ns4:kladrCode': {
+            value: string;
+          };
+          'ns4:fullName': {
+            value: string;
+          };
+        };
+        'ns4:deliveryPlace': {
+          value: string;
+        };
+        'ns4:noKladrForRegionSettlementInfo': {
+          'ns4:region': {
+            value: string;
+          };
+          'ns4:settlement': {
+            value: string;
+          };
+        };
+      };
 
-export interface SupplierAccountsDetails {
-  supplierAccountDetails: ErAccountDetails;
+  'ns4:byOKTMOInfo'?: {
+    'ns4:OKTMOInfo': {
+      'ns2:code': {
+        value: string;
+      };
+      'ns2:name': {
+        value: string;
+      };
+    };
+    'ns4:deliveryPlace': {
+      value: string;
+    };
+  };
+}
+interface INs4ByKLADRInfoItem {
+  'ns4:KLADRInfo': {
+    'ns4:kladrCode': {
+      value: string;
+    };
+    'ns4:fullName': {
+      value: string;
+    };
+  };
+  'ns4:deliveryPlace': {
+    value: string;
+  };
+  'ns4:noKladrForRegionSettlementInfo'?: {
+    'ns4:region': {
+      value: string;
+    };
+  };
+}
+interface IProducts {
+  product: IProductItem[] | IProduct;
+  quantityUndefined: IQuantityUndefined;
+}
+interface IProductItem {
+  sid: ISid;
+  guid: IGuid;
+  indexNum: IIndexNum;
+  OKPD2?: IOKPD2;
+  name: IName;
+  hierarchyType: IHierarchyType;
+  type: IType;
+  OKEI: IOKEI;
+  price: IPrice;
+  volumeSpecifyingMethod: IVolumeSpecifyingMethod;
+  volumeTextForm?: IVolumeTextForm;
+  sum?: ISum;
+  VATRate: IVATRate;
+  improvedProductReplacement: IImprovedProductReplacement;
+  purchaseObjectSid?: IPurchaseObjectSid;
+  externalSid?: IExternalSid;
+  KTRU?: IKTRU;
+  quantity?: IQuantity;
+  originCountry?:
+    | IOriginCountry
+    | (IOriginCountry | IOriginCountryItem[])
+    | IOriginCountryItem[];
+  isMedicalProduct?: IIsMedicalProduct;
+  medicalProductInfo?: IMedicalProductInfo;
+  drugPurchaseObjectInfo?: IDrugPurchaseObjectInfo;
+  electronicContractObjectSid?: IElectronicContractObjectSid;
+}
+interface IIndexNum {
+  value: string;
+}
+interface IOKPD2 {
+  code: ICode;
+  name: IName;
+}
+interface IHierarchyType {
+  value: string;
+}
+interface IType {
+  value: string;
+}
+interface IOKEI {
+  code: ICode;
+  nationalCode?: INationalCode;
+  trueNationalCode?: ITrueNationalCode;
+  fullName: IFullName;
+  nationalName?: INationalName;
+  name?: IName;
+}
+interface INationalCode {
+  value: string;
+}
+interface ITrueNationalCode {
+  value: string;
+}
+interface INationalName {
+  value: string;
+}
+interface IVolumeSpecifyingMethod {
+  value: string;
+}
+interface IVolumeTextForm {
+  value: string;
+}
+interface ISum {
+  value: string;
+}
+interface IVATRate {
+  value: string;
+}
+interface IImprovedProductReplacement {
+  value: string;
+}
+interface IQuantityUndefined {
+  value: string;
+}
+interface ISuppliersInfo {
+  supplierInfo: ISupplierInfo | ISupplierInfoItem[];
+}
+export interface ISupplierInfo {
+  legalEntityRF?: ILegalEntityRF;
+  supplierAccountsDetails: ISupplierAccountsDetails;
+  contractorRegistryNum?: IContractorRegistryNum;
+  individualPersonRFIndEntr?: IIndividualPersonRFIndEntr;
+}
+interface ILegalEntityRF {
+  EGRULInfo: IEGRULInfo;
+  otherInfo: IOtherInfo;
+  legalEntityRFSubdivision?: ILegalEntityRFSubdivision;
+  legalForm?: ILegalForm;
+  fullName?: IFullName;
+  shortName?: IShortName;
+  INN?: IINN;
+  KPP?: IKPP;
+  address?: IAddress;
+  postAddress?: IPostAddress;
+  contactInfo?: IContactInfo;
+  contactEMail?: IContactEMail;
+  contactPhone?: IContactPhone;
+}
+interface IEGRULInfo {
+  OGRN: IOGRN;
+  legalForm?: ILegalForm;
+  fullName: IFullName;
+  shortName: IShortName;
+  INN: IINN;
+  KPP: IKPP;
+  address: IAddress;
+}
+interface IOGRN {
+  value: string;
+}
+interface IShortName {
+  value: string;
+}
+interface IINN {
+  value: string;
+}
+interface IKPP {
+  value: string;
+}
+interface IAddress {
+  value: string;
+}
+interface IOtherInfo {
+  contactInfo?: IContactInfo;
+  contactEMail: IContactEMail;
+  contactPhone: IContactPhone;
+  postAdressInfo?: IPostAdressInfo;
+  statusInfo?: IStatusInfo;
+  largestTaxpayerKPP?: ILargestTaxpayerKPP;
+  isIP?: IIsIP;
+  personalAccount?: IPersonalAccount;
+}
+interface IContactInfo {
+  lastName: ILastName;
+  firstName: IFirstName;
+  middleName: IMiddleName;
+}
+interface ILastName {
+  value: string;
+}
+interface IFirstName {
+  value: string;
+}
+interface IMiddleName {
+  value: string;
+}
+interface IContactEMail {
+  value: string;
+}
+interface IContactPhone {
+  value: string;
+}
+interface ISupplierAccountsDetails {
+  supplierAccountDetails: ISupplierAccountDetails;
+}
+interface ISupplierAccountDetails {
+  'ns4:sid': {
+    value: string;
+  };
+  'ns4:guid': {
+    value: string;
+  };
+  'ns4:accountType': {
+    value: string;
+  };
+  'ns4:creditOrgName': {
+    value: string;
+  };
+  'ns4:detailsCreditOrgText': {
+    value: string;
+  };
+  'ns4:bankAccountNumber': {
+    value: string;
+  };
+  'ns4:bik': {
+    value: string;
+  };
+  'ns4:corrAccountNumber'?: {
+    value: string;
+  };
+  'ns4:counterpartyName'?: {
+    value: string;
+  };
+  'ns4:externalSid'?: {
+    value: string;
+  };
+  'ns4:counterparty160Name'?: {
+    value: string;
+  };
+  'ns4:personalAccountNumber'?: {
+    value: string;
+  };
+  'ns4:OKTMOInfo'?: {
+    'ns4:OKTMO': {
+      'ns2:code': {
+        value: string;
+      };
+      'ns2:name': {
+        value: string;
+      };
+    };
+  };
+  'ns4:KBK'?: {
+    value: string;
+  };
+  electronicContractSid?: IElectronicContractSid;
+}
+interface IHref {
+  value: string;
+}
+interface IPrintForm {
+  url: IUrl;
+  docRegNumber: IDocRegNumber;
+}
+interface IUrl {
+  value: string;
+}
+interface IDocRegNumber {
+  value: string;
+}
+interface IScanDocuments {
+  attachment?: IAttachment | IAttachmentItem[];
+  CPEPAttachment?: ICPEPAttachment | ICPEPAttachmentItem[];
+}
+interface IAttachment {
+  publishedContentId: IPublishedContentId;
+  fileName: IFileName;
+  docDescription: IDocDescription;
+  docRegNumber: IDocRegNumber;
+  url: IUrl;
+  cryptoSigns: ICryptoSigns;
+}
+interface IPublishedContentId {
+  value: string;
+}
+interface IFileName {
+  value: string;
+}
+interface IDocDescription {
+  value: string;
+}
+interface ICryptoSigns {
+  signature: ISignatureItem[];
+}
+interface ISignatureItem {
+  value: string;
+}
+interface IModification {
+  contractChange?: IContractChange;
+  attachments?: IAttachments;
+  errorCorrection?: IErrorCorrection;
+}
+interface IContractChange {
+  reason: IReason;
+  document: IDocument;
+}
+interface IDocument {
+  code: ICode;
+  name: IName;
+  base: IBase;
+  documentDate: IDocumentDate;
+}
+interface IBase {
+  value: string;
+}
+interface IDocumentDate {
+  value: string;
+}
+interface IAttachments {
+  attachment: IAttachmentItem[] | IAttachment;
+}
+interface IAttachmentItem {
+  publishedContentId: IPublishedContentId;
+  fileName: IFileName;
+  docDescription: IDocDescription;
+  docRegNumber: IDocRegNumber;
+  url: IUrl;
+  cryptoSigns: ICryptoSigns;
+}
+interface ICurrentContractStage {
+  value: string;
+}
+interface IOkpd2okved2 {
+  value: string;
+}
+interface IIsUnilateralRefusal {
+  value: string;
+}
+interface IOrder {
+  notificationNumber: INotificationNumber;
+  lotNumber: ILotNumber;
+  placing: IPlacing;
+  singleCustomer?: ISingleCustomer;
+  placingSingleCustomerText: IPlacingSingleCustomerText;
+  purchaseCode: IPurchaseCode;
+  contractProjectNumber?: IContractProjectNumber;
+  tenderPlan2020Info?: ITenderPlan2020Info;
+  isStructuredForm?: IIsStructuredForm;
+  tenderPlanInfo?: ITenderPlanInfo;
+}
+interface INotificationNumber {
+  value: string;
+}
+interface ILotNumber {
+  value: string;
+}
+interface IPlacing {
+  value: string;
+}
+interface IPlacingSingleCustomerText {
+  value: string;
+}
+interface IContractProjectNumber {
+  value: string;
+}
+interface IFundsBudgetLevel {
+  value: string;
+}
+interface IExternalSid {
+  value: string;
+}
+interface IPayments {
+  KBK2016?: IKBK2016;
+  paymentYear: IPaymentYear;
+  paymentSum: IPaymentSum;
+  paymentMonth?: IPaymentMonth;
+  KVR?: IKVR;
+}
+export interface IProtocolDate {
+  value: string;
+}
+export interface IDocumentBase {
+  value: string;
+}
+export interface IDocumentCode {
+  value: string;
+}
+export interface IEnforcement {
+  bankGuarantee?: IBankGuarantee;
+  cashAccount?: ICashAccount;
+}
+interface IBankGuarantee {
+  regNumberNotPublishedOnEIS: IRegNumberNotPublishedOnEIS;
+  docNumberNotPublishedOnEIS: IDocNumberNotPublishedOnEIS;
+  currency: ICurrency;
+  guaranteeAmount: IGuaranteeAmount;
+  currencyRate?: ICurrencyRate;
+}
+interface IRegNumberNotPublishedOnEIS {
+  value: string;
+}
+interface IDocNumberNotPublishedOnEIS {
+  value: string;
+}
+interface IGuaranteeAmount {
+  value: string;
+}
+interface IProduct {
+  purchaseObjectSid?: IPurchaseObjectSid;
+  sid: ISid;
+  externalSid?: IExternalSid;
+  guid: IGuid;
+  indexNum: IIndexNum;
+  KTRU?: IKTRU;
+  name: IName;
+  hierarchyType: IHierarchyType;
+  type?: IType;
+  OKEI: IOKEI;
+  price: IPrice;
+  volumeSpecifyingMethod: IVolumeSpecifyingMethod;
+  quantity?: IQuantity;
+  sum?: ISum;
+  VATRate?: IVATRate;
+  improvedProductReplacement: IImprovedProductReplacement;
+  OKPD2?: IOKPD2;
+  volumeTextForm?: IVolumeTextForm;
+  drugPurchaseObjectInfo?: IDrugPurchaseObjectInfo;
+  originCountry?: IOriginCountry | IOriginCountryItem[];
+  isMedicalProduct?: IIsMedicalProduct;
+  medicalProductInfo?: IMedicalProductInfo;
+  electronicContractObjectSid?: IElectronicContractObjectSid;
+}
+interface IPurchaseObjectSid {
+  value: string;
+}
+interface IKTRU {
+  code: ICode;
+  name: IName;
+  versionId: IVersionId;
+  versionNumber: IVersionNumber;
+  OKPD2: IOKPD2;
+  characteristics?: ICharacteristics;
+}
+interface IVersionId {
+  value: string;
+}
+interface IQuantity {
+  value: string;
+}
+export interface ICounterpartiesInfo {
+  counterpartyInfo: ICounterpartyInfo;
+}
+interface ICounterpartyInfo {
+  'ns4:payingPenaltiesInfo': {
+    'ns2:regNum': {
+      value: string;
+    };
+    'ns2:fullName': {
+      value: string;
+    };
+    'ns4:inn': {
+      value: string;
+    };
+    'ns4:kpp': {
+      value: string;
+    };
+  };
+  'ns4:counterpartyAccountsDetails': {
+    'ns4:counterpartyAccountDetails': {
+      'ns4:sid': {
+        value: string;
+      };
+      'ns4:externalSid': {
+        value: string;
+      };
+      'ns4:guid': {
+        value: string;
+      };
+      'ns4:accountType': {
+        value: string;
+      };
+      'ns4:personalAccountNumber': {
+        value: string;
+      };
+      'ns4:creditOrgName': {
+        value: string;
+      };
+      'ns4:detailsCreditOrgText': {
+        value: string;
+      };
+      'ns4:bankAccountNumber': {
+        value: string;
+      };
+      'ns4:bik': {
+        value: string;
+      };
+      'ns4:corrAccountNumber': {
+        value: string;
+      };
+      'ns4:counterpartyName': {
+        value: string;
+      };
+      'ns4:OKTMOInfo': {
+        'ns4:OKTMO': {
+          'ns2:code': {
+            value: string;
+          };
+          'ns2:name': {
+            value: string;
+          };
+        };
+      };
+      'ns4:KBK': {
+        value: string;
+      };
+    };
+  };
+}
+interface IPostAdressInfo {
+  mailingAdress: IMailingAdress;
+  mailFacilityName?: IMailFacilityName;
+  postBoxNumber?: IPostBoxNumber;
+}
+interface IMailingAdress {
+  value: string;
+}
+interface IMailFacilityName {
+  value: string;
+}
+interface IPostBoxNumber {
+  value: string;
+}
+interface IContractorRegistryNum {
+  value: string;
+}
+interface ICPEPAttachment {
+  publishedContentId: IPublishedContentId;
+  fileName: IFileName;
+  docDescription: IDocDescription;
+  docRegNumber: IDocRegNumber;
+  url: IUrl;
+  cryptoSigns: ICryptoSigns;
+}
+interface IErrorCorrection {
+  description: IDescription;
+}
+interface IDescription {
+  value: string;
+}
+export interface IExternalId {
+  value: string;
+}
+export interface IQuantityContractStages {
+  value: string;
+}
+interface ICashAccount {
+  currency: ICurrency;
+  amount: IAmount;
+  currencyRate?: ICurrencyRate;
+}
+interface IAmount {
+  value: string;
+}
+interface ICurrencyRate {
+  rate: IRate;
+  raiting: IRaiting;
+}
+interface IRate {
+  value: string;
+}
+interface IRaiting {
+  value: string;
+}
+export interface ISt14Info {
+  NPAsInfo: INPAsInfoItem[] | INPAsInfo;
+}
+interface INPAsInfoItem {
+  NPAInfo: INPAInfo;
+  requirementType: IRequirementType;
+  requirementName: IRequirementName;
+}
+interface INPAInfo {
+  'ns2:code': {
+    value: string;
+  };
+  'ns2:name': {
+    value: string;
+  };
+  'ns2:shortName': {
+    value: string;
+  };
+}
+interface IRequirementType {
+  value: string;
+}
+interface IRequirementName {
+  value: string;
+}
+export interface IQualityGuaranteeInfo {
+  notPublishedOnEIS?: INotPublishedOnEIS;
+  warrantyReqsText: IWarrantyReqsText;
+  isQAEnsuramceRequired: IIsQAEnsuramceRequired;
+  manufacturerWarrantyReqsText?: IManufacturerWarrantyReqsText;
+  providedPeriod?: IProvidedPeriod;
+}
+interface INotPublishedOnEIS {
+  value: string;
+}
+interface IWarrantyReqsText {
+  value: string;
+}
+interface IIsQAEnsuramceRequired {
+  value: string;
+}
+interface IOriginCountry {
+  countryCode: ICountryCode;
+  countryFullName: ICountryFullName;
+}
+interface ICountryCode {
+  value: string;
+}
+interface ICountryFullName {
+  value: string;
+}
+interface IIsMedicalProduct {
+  value: string;
+}
+interface IMedicalProductInfo {
+  medicalProductCode: IMedicalProductCode;
+  medicalProductName: IMedicalProductName;
+}
+interface IMedicalProductCode {
+  value: string;
+}
+interface IMedicalProductName {
+  value: string;
+}
+interface ICharacteristics {
+  characteristicsUsingTextForm?:
+    | ICharacteristicsUsingTextForm
+    | ICharacteristicsUsingTextFormItem[];
+  characteristicsUsingReferenceInfo?:
+    | ICharacteristicsUsingReferenceInfoItem[]
+    | ICharacteristicsUsingReferenceInfo;
+}
+interface ICharacteristicsUsingTextForm {
+  name: IName;
+  type: IType;
+  values: IValues;
+}
+interface IValues {
+  value: IValue | (IValue | IValueItem[]);
+}
+interface IValue {
+  qualityDescription?: IQualityDescription;
+  OKEI?: IOKEI;
+  rangeSet?: IRangeSet;
+  valueSet?: IValueSet;
+}
+interface IQualityDescription {
+  value: string;
+}
+interface IStatusInfo {
+  'ns2:code': {
+    value: string;
+  };
+  'ns2:name'?: {
+    value: string;
+  };
+}
+export interface IIsDDU {
+  value: string;
+}
+interface IStagesItem {
+  externalSid?: IExternalSid;
+  guid: IGuid;
+  startDate: IStartDate;
+  sid: ISid;
+  endDate: IEndDate;
+  payments: IPayments | IPaymentsItem[];
+  stagePrice?: IStagePrice;
+}
+export interface IAdvancePaymentSum {
+  sumInPercents: ISumInPercents;
+  priceValue: IPriceValue;
+}
+interface ISumInPercents {
+  value: string;
+}
+interface IPriceValue {
+  value: string;
+}
+interface IStageAdvancePaymentSum {
+  priceValue: IPriceValue;
+}
+interface ISupplierInfoItem {
+  legalEntityRF: ILegalEntityRF;
+  supplierAccountsDetails?: ISupplierAccountsDetails;
+}
+interface ILegalEntityRFSubdivision {
+  isSubdivision: IIsSubdivision;
+  EGRULInfo: IEGRULInfo;
+}
+interface IIsSubdivision {
+  value: string;
+}
+interface IExtrabudgetFunds {
+  isExtrabudgetFunds: IIsExtrabudgetFunds;
+  extrabudget: IExtrabudget;
+}
+interface IIsExtrabudgetFunds {
+  value: string;
+}
+interface IExtrabudget {
+  code: ICode;
+  name: IName;
+}
+interface IKVR {
+  value: string;
+}
+interface ICharacteristicsUsingReferenceInfoItem {
+  name: IName;
+  type: IType;
+  kind: IKind;
+  values: IValues;
+}
+interface IKind {
+  value: string;
+}
+interface IValueItem {
+  qualityDescription: IQualityDescription;
+}
+interface ILargestTaxpayerKPP {
+  value: string;
+}
+export interface ISubContractorsSum {
+  sumInPercents: ISumInPercents;
+  priceValueRUR: IPriceValueRUR;
+}
+interface IPriceValueRUR {
+  value: string;
+}
+export interface IDefenseContractNumber {
+  value: string;
+}
+export interface IIsGOZ {
+  value: string;
+}
+interface IRangeSet {
+  valueRange: IValueRange;
+}
+interface IValueRange {
+  maxMathNotation?: IMaxMathNotation;
+  max?: IMax;
+  minMathNotation?: IMinMathNotation;
+  min?: IMin;
+}
+interface IMaxMathNotation {
+  value: string;
+}
+interface IMax {
+  value: string;
+}
+interface IMinMathNotation {
+  value: string;
+}
+interface IMin {
+  value: string;
+}
+interface ICustomerAccountDetailsItem {
+  'ns4:sid': {
+    value: string;
+  };
+  'ns4:guid': {
+    value: string;
+  };
+  'ns4:accountType': {
+    value: string;
+  };
+  'ns4:personalAccountNumber': {
+    value: string;
+  };
+  'ns4:creditOrgName': {
+    value: string;
+  };
+  'ns4:detailsCreditOrgText': {
+    value: string;
+  };
+  'ns4:bankAccountNumber': {
+    value: string;
+  };
+  'ns4:bik': {
+    value: string;
+  };
+  'ns4:corrAccountNumber': {
+    value: string;
+  };
+  electronicContractSid?: IElectronicContractSid;
+}
+interface IKVRsChange {
+  value: string;
+}
+interface IManufacturerWarrantyReqsText {
+  value: string;
+}
+interface IDrugPurchaseObjectInfo {
+  drugInfoUsingReferenceInfo: IDrugInfoUsingReferenceInfo;
+}
+interface IDrugInfoUsingReferenceInfo {
+  MNNsInfo: IMNNsInfo;
+  isZNVLP: IIsZNVLP;
+  expirationDateCustomFormatInfo?: IExpirationDateCustomFormatInfo;
+}
+interface IMNNsInfo {
+  MNNInfo: IMNNInfo;
+}
+interface IMNNInfo {
+  MNNExternalCode: IMNNExternalCode;
+  MNNDrugCode: IMNNDrugCode;
+  MNNName: IMNNName;
+  dosageUser: IDosageUser;
+  positionsTradeName: IPositionsTradeName;
+}
+interface IMNNExternalCode {
+  value: string;
+}
+interface IMNNDrugCode {
+  value: string;
+}
+interface IMNNName {
+  value: string;
+}
+interface IDosageUser {
+  dosageUserOKEI: IDosageUserOKEI;
+  dosageUserName: IDosageUserName;
+}
+interface IDosageUserOKEI {
+  code: ICode;
+  fullName: IFullName;
+}
+interface IDosageUserName {
+  value: string;
+}
+interface IPositionsTradeName {
+  positionTradeName:
+    | IPositionTradeName
+    | (IPositionTradeName | IPositionTradeNameItem[]);
+}
+interface IPositionTradeName {
+  guid: IGuid;
+  sid: ISid;
+  positionTradeNameExternalCode: IPositionTradeNameExternalCode;
+  drugCode: IDrugCode;
+  tradeInfo: ITradeInfo;
+  certificateNumber: ICertificateNumber;
+  medicamentalFormInfo: IMedicamentalFormInfo;
+  dosageInfo: IDosageInfo;
+  certificateKeeperName: ICertificateKeeperName;
+  manufacturerInfo: IManufacturerInfo;
+  packagingsInfo: IPackagingsInfo;
+  MNNNormName: IMNNNormName;
+  dosageNormName: IDosageNormName;
+  medicamentalFormNormName: IMedicamentalFormNormName;
+}
+interface IPositionTradeNameExternalCode {
+  value: string;
+}
+interface IDrugCode {
+  value: string;
+}
+interface ITradeInfo {
+  tradeName: ITradeName;
+}
+interface ITradeName {
+  value: string;
+}
+interface ICertificateNumber {
+  value: string;
+}
+interface IMedicamentalFormInfo {
+  medicamentalFormName: IMedicamentalFormName;
+}
+interface IMedicamentalFormName {
+  value: string;
+}
+interface IDosageInfo {
+  dosageName: IDosageName;
+  dosageOKEI: IDosageOKEI;
+  dosageValue: IDosageValue;
+  dosageGRLSValue: IDosageGRLSValue;
+  dosageUserName: IDosageUserName;
+}
+interface IDosageName {
+  value: string;
+}
+interface IDosageOKEI {
+  code: ICode;
+  nationalCode: INationalCode;
+  name: IName;
+}
+interface IDosageValue {
+  value: string;
+}
+interface IDosageGRLSValue {
+  value: string;
+}
+interface ICertificateKeeperName {
+  value: string;
+}
+interface IManufacturerInfo {
+  manufacturerOKSM: IManufacturerOKSM;
+  manufacturerName: IManufacturerName;
+}
+interface IManufacturerOKSM {
+  countryCode: ICountryCode;
+  countryFullName: ICountryFullName;
+}
+interface IManufacturerName {
+  value: string;
+}
+interface IPackagingsInfo {
+  packagingInfo: IPackagingInfo;
+}
+interface IPackagingInfo {
+  primaryPackagingInfo: IPrimaryPackagingInfo;
+  packaging1Quantity: IPackaging1Quantity;
+  packaging2Quantity: IPackaging2Quantity;
+  sumaryPackagingQuantity: ISumaryPackagingQuantity;
+  completeness: ICompleteness;
+  drugQuantity: IDrugQuantity;
+}
+interface IPrimaryPackagingInfo {
+  primaryPackagingName: IPrimaryPackagingName;
+}
+interface IPrimaryPackagingName {
+  value: string;
+}
+interface IPackaging1Quantity {
+  value: string;
+}
+interface IPackaging2Quantity {
+  value: string;
+}
+interface ISumaryPackagingQuantity {
+  value: string;
+}
+interface ICompleteness {
+  value: string;
+}
+interface IDrugQuantity {
+  value: string;
+}
+interface IMNNNormName {
+  value: string;
+}
+interface IDosageNormName {
+  value: string;
+}
+interface IMedicamentalFormNormName {
+  value: string;
+}
+interface IIsZNVLP {
+  value: string;
+}
+interface IOriginCountryItem {
+  countryCode: ICountryCode;
+  countryFullName: ICountryFullName;
+}
+interface INPAsInfo {
+  NPAInfo: INPAInfo;
+  requirementType: IRequirementType;
+  requirementName: IRequirementName;
+}
+interface ICharacteristicsUsingTextFormItem {
+  name: IName;
+  type: IType;
+  values: IValues;
+}
+interface IValueSet {
+  concreteValue: IConcreteValue;
+}
+interface IConcreteValue {
+  value: string;
+}
+interface ICharacteristicsUsingReferenceInfo {
+  name: IName;
+  type: IType;
+  kind: IKind;
+  values: IValues;
+}
+interface IIndividualPersonRFIndEntr {
+  EGRIPInfo: IEGRIPInfo;
+  otherInfo: IOtherInfo;
+}
+interface IEGRIPInfo {
+  OGRNIP: IOGRNIP;
+  lastName: ILastName;
+  firstName: IFirstName;
+  middleName: IMiddleName;
+  INN: IINN;
+  address: IAddress;
+}
+interface IOGRNIP {
+  value: string;
+}
+interface IIsIP {
+  value: string;
+}
+interface IPositionTradeNameItem {
+  guid: IGuid;
+  sid: ISid;
+  positionTradeNameExternalCode: IPositionTradeNameExternalCode;
+  drugCode: IDrugCode;
+  tradeInfo: ITradeInfo;
+  certificateNumber: ICertificateNumber;
+  medicamentalFormInfo: IMedicamentalFormInfo;
+  dosageInfo: IDosageInfo;
+  certificateKeeperName: ICertificateKeeperName;
+  manufacturerInfo: IManufacturerInfo;
+  packagingsInfo: IPackagingsInfo;
+  MNNNormName: IMNNNormName;
+  dosageNormName: IDosageNormName;
+  medicamentalFormNormName: IMedicamentalFormNormName;
+}
+interface IProvidedPeriod {
+  otherPeriodText: IOtherPeriodText;
+}
+interface IOtherPeriodText {
+  value: string;
+}
+interface IExpirationDateCustomFormatInfo {
+  expirationDateMonthYear: IExpirationDateMonthYear;
+}
+interface IExpirationDateMonthYear {
+  month: IMonth;
+  year: IYear;
+}
+interface IMonth {
+  value: string;
+}
+interface IYear {
+  value: string;
+}
+export interface IMedicalDocuments {
+  attachment: IAttachment;
+}
+interface IIsStructuredForm {
+  value: string;
+}
+interface IElectronicContractSid {
+  value: string;
+}
+interface IElectronicContractObjectSid {
+  value: string;
+}
+interface ICPEPAttachmentItem {
+  publishedContentId: IPublishedContentId;
+  fileName: IFileName;
+  docDescription: IDocDescription;
+  docRegNumber: IDocRegNumber;
+  url: IUrl;
+  cryptoSigns: ICryptoSigns;
+}
+interface IAmountsReducedByTaxes {
+  value: string;
+}
+export interface IConstructionWorksInfo {
+  isConstructionWorks: IIsConstructionWorks;
+  constructionWorkGroup: IConstructionWorkGroup;
+}
+interface IIsConstructionWorks {
+  value: string;
+}
+interface IConstructionWorkGroup {
+  code: ICode;
+  name: IName;
+}
+export interface IBankSupportCRNewInfo {
+  'ns4:bankSupportContractRequired': {
+    value: string;
+  };
+  'ns4:treasurySupportContractInfo': {
+    'ns4:treasurySupportContractRequired': {
+      value: string;
+    };
+    'ns4:treasurySupportContractType': {
+      value: string;
+    };
+  };
+}
+interface IPersonalAccount {
+  value: string;
+}
+export interface ISingleSupplierP25Part1St93Documents {
+  attachment: IAttachment;
+}
+interface ITenderPlanInfo {
+  plan2017Number: IPlan2017Number;
+  position2017Number: IPosition2017Number;
+}
+interface IPlan2017Number {
+  value: string;
+}
+interface IPosition2017Number {
+  value: string;
+}
+export interface IEnergyServiceContractInfo {
+  value: string;
+}
+export interface ISuppliers {
+  supplier: ISupplier;
+}
+interface ISupplier {
+  legalEntityRF?: ILegalEntityRF;
+  supplierAccountsDetails: ISupplierAccountsDetails;
+  individualPersonRF?: IIndividualPersonRF;
+}
+interface IPostAddress {
+  value: string;
+}
+interface IIndividualPersonRF {
+  lastName: ILastName;
+  firstName: IFirstName;
+  middleName: IMiddleName;
+  INN: IINN;
+  isIP: IIsIP;
+  address: IAddress;
+  contactEMail: IContactEMail;
+  contactPhone: IContactPhone;
+  isCulture: IIsCulture;
+}
+interface IIsCulture {
+  value: string;
 }
