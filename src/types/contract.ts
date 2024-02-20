@@ -1,4 +1,4 @@
-export interface IRootObject {
+export interface IContract {
   'ns3:export': {
     'ns3:contract': {
       id: IId;
@@ -41,7 +41,7 @@ interface IPlacementDate {
   value: string;
 }
 interface IPublishDate {
-  value: string;
+  value: Date;
 }
 interface IVersionNumber {
   value: string;
@@ -225,13 +225,13 @@ interface IGuid {
   value: string;
 }
 interface IStartDate {
-  value: string;
+  value: Date;
 }
 interface ISid {
   value: string;
 }
 interface IEndDate {
-  value: string;
+  value: Date;
 }
 
 interface IKBK2016 {
@@ -247,7 +247,7 @@ interface IPaymentSum {
   value: string;
 }
 interface ISignDate {
-  value: string;
+  value: Date;
 }
 interface INumber {
   value: string;

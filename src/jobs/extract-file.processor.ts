@@ -10,13 +10,16 @@ import { Repository } from 'typeorm';
 import {
   Contract,
   Organization,
-  Payment,
+  Finance,
   Product,
   Stage,
+  Acceptance,
+  Payment,
 } from '@app/database/entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { xml2json } from 'xml-js';
-import { IRootObject } from '@app/types/contract';
+import { IContract } from '@app/types/contract';
+import { IContractProcedure } from '@app/types/contractProcedure';
 import { writeFileSync } from 'fs';
 
 @Processor(Queues.EXTRACT_FILE)
@@ -34,6 +37,12 @@ export class ExtractFileProcessor {
 
     @InjectRepository(Stage)
     private readonly stageRepository: Repository<Stage>,
+
+    @InjectRepository(Finance)
+    private readonly financeRepository: Repository<Finance>,
+
+    @InjectRepository(Acceptance)
+    private readonly acceptanceRepository: Repository<Acceptance>,
 
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
@@ -57,12 +66,45 @@ export class ExtractFileProcessor {
       textKey: 'value',
     });
 
-    const parsedXml: IRootObject = JSON.parse(xml2jsonResult);
-    const contractData = parsedXml['ns3:export']['ns3:contract'];
+    const parsedXml: IContract | IContractProcedure =
+      JSON.parse(xml2jsonResult);
 
     try {
-      if (contractData) {
+      if ('ns3:contractProcedure' in parsedXml['ns3:export']) {
+        const contractProcedure =
+          parsedXml['ns3:export']['ns3:contractProcedure'];
+
+        const currentStage = await this.stageRepository.findOneBy({
+          sid: contractProcedure.executions.stage.sid.value,
+        });
+
+        if (!currentStage) return;
+
+        const executions = Array.isArray(contractProcedure.executions.execution)
+          ? contractProcedure.executions.execution
+          : [contractProcedure.executions.execution];
+
+        executions.forEach((execution) => {
+          const document = new Document();
+          document.currency = execution.currency.name.value;
+          document.documentBody = execution.docAcceptance ?? execution.payDoc;
+          document.finalStageExecution =
+            contractProcedure.executions.finalStageExecution?.value ?? false;
+          document.paid = execution.paid.value;
+          // document.sid = contractProcedure.sid.value;
+          document.publishDate = contractProcedure.publishDate.value;
+          // document.quantity
+          document.stage = currentStage;
+
+          documents.push(document);
+        });
+      }
+
+      if ('ns3:contract' in parsedXml['ns3:export']) {
+        const contractData = parsedXml['ns3:export']['ns3:contract'];
+
         const suppliers: Array<Organization> = [];
+        const suppliersSet = new Set<string>();
 
         if (contractData.suppliersInfo) {
           const contractSuppliers = Array.isArray(
@@ -77,6 +119,8 @@ export class ExtractFileProcessor {
             if (s.legalEntityRF) {
               const { EGRULInfo } = s.legalEntityRF;
 
+              if (suppliersSet.has(EGRULInfo.INN.value)) return;
+
               supplier.inn = EGRULInfo.INN.value;
               supplier.kpp = EGRULInfo.KPP.value;
               supplier.fullName = EGRULInfo.fullName.value;
@@ -85,12 +129,14 @@ export class ExtractFileProcessor {
 
             if (s.individualPersonRFIndEntr) {
               const { EGRIPInfo } = s.individualPersonRFIndEntr;
+              if (suppliersSet.has(EGRIPInfo.INN.value)) return;
 
               supplier.inn = EGRIPInfo.INN.value;
               supplier.fullName = `Индивидуальный предприниматель ${EGRIPInfo.lastName.value} ${EGRIPInfo.firstName.value} ${EGRIPInfo.middleName.value}`;
               supplier.shortName = `ИП ${EGRIPInfo.lastName.value} ${EGRIPInfo.firstName.value[0]}. ${EGRIPInfo.middleName.value[0]}.`;
             }
 
+            suppliersSet.add(supplier.inn);
             suppliers.push(supplier);
           });
         }
@@ -109,16 +155,12 @@ export class ExtractFileProcessor {
         contract.regNum = contractData.regNum.value;
         contract.name = contractData.contractSubject.value;
         contract.number = contractData.number.value;
-        contract.signDate = new Date(contractData.signDate.value);
+        contract.signDate = contractData.signDate.value;
         contract.price = contractData.priceInfo.price.value;
-        contract.executionStartedAt = new Date(
-          contractData.executionPeriod.startDate.value,
-        );
-        contract.executionEndedAt = new Date(
-          contractData.executionPeriod.endDate.value,
-        );
-        contract.placementDate = new Date(contractData.placementDate.value);
-        contract.publishDate = new Date(contractData.publishDate.value);
+        contract.executionStartedAt =
+          contractData.executionPeriod.startDate.value;
+        contract.executionEndedAt = contractData.executionPeriod.endDate.value;
+        contract.publishDate = contractData.publishDate.value;
         // FIXME: check MANY-TO-MANY ?
         contract.supplier = suppliers[0];
         contract.customer = customer;
@@ -149,7 +191,7 @@ export class ExtractFileProcessor {
         });
 
         const stages: Array<Stage> = [];
-        const payments: Array<Payment> = [];
+        const finances: Array<Finance> = [];
 
         const contractStages = Array.isArray(
           contractData.executionPeriod.stages,
@@ -161,8 +203,8 @@ export class ExtractFileProcessor {
           const stage = new Stage();
 
           stage.sid = s.sid.value;
-          stage.startDate = new Date(s.startDate.value);
-          stage.endDate = new Date(s.endDate.value);
+          stage.startDate = s.startDate.value;
+          stage.endDate = s.endDate.value;
           stage.stagePrice = s.stagePrice?.value ?? '0';
           stage.stageAdvancePaymentSum =
             s.stageAdvancePaymentSum?.priceValue.value ?? '0';
@@ -184,16 +226,14 @@ export class ExtractFileProcessor {
               (Array.isArray(s.payments) ? s.payments : [s.payments]);
 
             contractPayments?.forEach((f) => {
-              const payment = new Payment();
-              payment.kbk = f.KBK2016?.value;
-              payment.paymentMonth = f.paymentMonth?.value;
-              payment.paymentYear = f.paymentYear.value;
-              payment.paymentSum = f.paymentSum.value;
-              payment.stage = stages.find(
-                (stage) => stage.sid === s.sid.value,
-              )!;
+              const finance = new Finance();
+              finance.kbk = f.KBK2016?.value;
+              finance.paymentMonth = f.paymentMonth?.value;
+              finance.paymentYear = f.paymentYear.value;
+              finance.paymentSum = f.paymentSum.value;
+              finance.stage = stages.find(({ sid }) => sid === s.sid.value)!;
 
-              payments.push(payment);
+              finances.push(finance);
             });
           });
         }
@@ -201,7 +241,7 @@ export class ExtractFileProcessor {
         await this.contractRepository.save(contract);
         await this.stageRepository.save(stages);
         await this.productRepository.save(products);
-        await this.paymentRepository.save(payments);
+        await this.financeRepository.save(finances);
       }
     } catch (error) {
       console.log({ msg: data.fileName });
@@ -209,7 +249,7 @@ export class ExtractFileProcessor {
 
       writeFileSync(
         `temp/${data.fileName}.ts`,
-        `export default ${JSON.stringify(contractData)}`,
+        `export default ${JSON.stringify(parsedXml)}`,
       );
     }
   }

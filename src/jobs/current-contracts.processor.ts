@@ -24,6 +24,6 @@ export class CurrentContractsProcessor extends AbstractJobProcessor {
   async handler(): Promise<void> {
     const result = await this.ftp.getCurMonthContracts(Subjects.Marij_El_Resp);
 
-    await this.jobs.downloadFile(result[0]);
+    await Promise.all(result.map((file) => this.jobs.downloadFile(file)));
   }
 }

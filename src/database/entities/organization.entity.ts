@@ -16,6 +16,6 @@ export class Organization {
   @Index()
   shortName?: string;
 
-  @OneToMany(() => Contract, (contract) => contract.regNum, { cascade: true })
+  @OneToMany(() => Contract, ({ regNum }) => regNum, { cascade: true })
   contracts!: Array<Contract>;
 }

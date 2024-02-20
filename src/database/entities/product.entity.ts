@@ -1,6 +1,5 @@
-import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Contract } from './contract.entity';
-import { Document } from './document.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -31,9 +30,6 @@ export class Product {
   @Column({ type: 'decimal', nullable: true })
   sum?: string;
 
-  @ManyToOne(() => Contract, (contract) => contract.regNum)
+  @ManyToOne(() => Contract, ({ regNum }) => regNum)
   contract!: Contract;
-
-  @OneToOne(() => Document, (document) => document.sid, { cascade: true })
-  document!: Document;
 }

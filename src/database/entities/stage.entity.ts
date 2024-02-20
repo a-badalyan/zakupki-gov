@@ -1,7 +1,8 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { Contract } from './contract.entity';
-import { Document } from './document.entity';
 import { Payment } from './payment.entity';
+import { Finance } from './finance.entity';
+import { Acceptance } from './acceptance.entity';
 
 @Entity({ name: 'stages' })
 export class Stage {
@@ -20,12 +21,15 @@ export class Stage {
   @Column({ type: 'text' })
   stageAdvancePaymentSum!: string;
 
-  @ManyToOne(() => Contract, (contract) => contract.regNum)
+  @ManyToOne(() => Contract, ({ regNum }) => regNum)
   contract!: Contract;
 
-  @OneToMany(() => Document, (document) => document.sid, { cascade: true })
-  documents!: Array<Document>;
-
-  @OneToMany(() => Payment, (payment) => payment.stage, { cascade: true })
+  @OneToMany(() => Payment, ({ sid }) => sid, { cascade: true })
   payments!: Array<Payment>;
+
+  @OneToMany(() => Acceptance, ({ sid }) => sid, { cascade: true })
+  acceptances!: Array<Acceptance>;
+
+  @OneToMany(() => Finance, ({ stage }) => stage, { cascade: true })
+  finances!: Array<Finance>;
 }

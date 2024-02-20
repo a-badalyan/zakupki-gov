@@ -1,23 +1,32 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Stage } from './stage.entity';
 
 @Entity({ name: 'payments' })
 export class Payment {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column({ type: 'text', nullable: true })
-  kbk?: string;
-
-  @Column({ type: 'text', nullable: true })
-  paymentMonth?: string;
+  @PrimaryColumn({ type: 'text' })
+  sid!: string;
 
   @Column({ type: 'text' })
-  paymentYear!: string;
+  documentName!: string;
 
   @Column({ type: 'text' })
-  paymentSum!: string;
+  documentNum!: string;
 
-  @ManyToOne(() => Stage, (stage) => stage.sid)
+  @Column({ type: 'timestamp' })
+  documentDate!: Date;
+
+  @Column({ type: 'decimal' })
+  paidAmount!: string;
+
+  @Column({ type: 'boolean', default: false })
+  advancePayment!: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  improperExecutionText?: string;
+
+  @Column({ type: 'timestamp' })
+  publishDate!: Date;
+
+  @ManyToOne(() => Stage, ({ sid }) => sid, { cascade: true })
   stage!: Stage;
 }
