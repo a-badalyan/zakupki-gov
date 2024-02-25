@@ -35,7 +35,7 @@ interface IExecutions {
   stage: IStage;
   ordinalNumber: IOrdinalNumber;
   finalStageExecution?: IFinalStageExecution;
-  execution: IExecution | IExecutionItem[];
+  execution: IExecution | IExecution[];
 }
 interface IStage {
   sid: ISid;
@@ -100,13 +100,13 @@ interface IName {
   value: string;
 }
 interface IDocumentDate {
-  value: string;
+  value: Date;
 }
 interface IDocumentNum {
   value: string;
 }
 interface IDeliveryAcceptDate {
-  value: string;
+  value: Date;
 }
 interface IFulfilmentSum {
   value: string;
@@ -372,19 +372,7 @@ interface ITotalPaymentAmount {
 interface IGuidEDI {
   value: string;
 }
-interface IExecutionItem {
-  docAcceptance?: IDocAcceptance;
-  currency: ICurrency;
-  paid: IPaid;
-  paidVATRUR: IPaidVATRUR;
-  improperExecutionText: IImproperExecutionText;
-  product?: IProduct;
-  quantityContractSubjects?: IQuantityContractSubjects;
-  docExecution?: IDocExecution;
-  payDoc?: IPayDoc;
-  paidRUR?: IPaidRUR;
-  paidVAT?: IPaidVAT;
-}
+
 interface IOriginCountry {
   countryCode: ICountryCode;
   countryFullName: ICountryFullName;

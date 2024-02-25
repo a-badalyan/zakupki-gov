@@ -19,8 +19,9 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { xml2json } from 'xml-js';
 import { IContract } from '@app/types/contract';
-import { IContractProcedure } from '@app/types/contractProcedure';
+import { IAttachment, IContractProcedure } from '@app/types/contractProcedure';
 import { writeFileSync } from 'fs';
+import { gd } from '@app/utils/gd';
 
 @Processor(Queues.EXTRACT_FILE)
 @Injectable()
@@ -80,23 +81,59 @@ export class ExtractFileProcessor {
 
         if (!currentStage) return;
 
-        const executions = Array.isArray(contractProcedure.executions.execution)
-          ? contractProcedure.executions.execution
-          : [contractProcedure.executions.execution];
+        const acceptances: Array<Acceptance> = [];
+        const payments: Array<Payment> = [];
+
+        // const existedContract = await this.contractRepository.findOneBy({
+        //   regNum: contractProcedure.regNum.value,
+        // });
+
+        // if (!existedContract) return;
+
+        const executions = gd(contractProcedure.executions.execution);
 
         executions.forEach((execution) => {
-          const document = new Document();
-          document.currency = execution.currency.name.value;
-          document.documentBody = execution.docAcceptance ?? execution.payDoc;
-          document.finalStageExecution =
-            contractProcedure.executions.finalStageExecution?.value ?? false;
-          document.paid = execution.paid.value;
-          // document.sid = contractProcedure.sid.value;
-          document.publishDate = contractProcedure.publishDate.value;
-          // document.quantity
-          document.stage = currentStage;
+          const { docAcceptance, payDoc } = execution;
 
-          documents.push(document);
+          if (docAcceptance) {
+            const attachments: Array<IAttachment> = [];
+
+            const acceptance = new Acceptance();
+
+            acceptance.sid = docAcceptance.sid.value;
+            acceptance.name = docAcceptance.name.value;
+            acceptance.documentDate = docAcceptance.documentDate.value;
+            acceptance.documentNum = docAcceptance.documentNum.value;
+            acceptance.fulfilmentSum = docAcceptance.fulfilmentSum?.value;
+            acceptance.receiptDocuments = attachments;
+            acceptance.totalPaymentAmount =
+              docAcceptance.totalPaymentAmount?.value;
+            acceptance.deliveryAcceptDate =
+              docAcceptance.deliveryAcceptDate?.value;
+            acceptance.publishDate = contractProcedure.publishDate.value;
+            acceptance.stage = currentStage;
+
+            acceptances.push(acceptance);
+          }
+
+          if (payDoc) {
+            const payment = new Payment();
+
+            payment.sid = payDoc.sid.value;
+            payment.documentName = payDoc.documentName.value;
+            payment.documentNum = payDoc.documentNum.value;
+            payment.documentDate = payDoc.documentDate.value;
+            payment.paidAmount = execution.paid.value;
+            payment.advancePayment =
+              payDoc.payDocTypeInfo?.advancePaymentPayDoc
+                ?.isAdvancePaymentPayDoc.value ?? false;
+            payment.improperExecutionText =
+              execution.improperExecutionText?.value;
+            payment.publishDate = contractProcedure.publishDate.value;
+            payment.stage = currentStage;
+
+            payments.push(payment);
+          }
         });
       }
 
@@ -107,11 +144,7 @@ export class ExtractFileProcessor {
         const suppliersSet = new Set<string>();
 
         if (contractData.suppliersInfo) {
-          const contractSuppliers = Array.isArray(
-            contractData.suppliersInfo.supplierInfo,
-          )
-            ? contractData.suppliersInfo.supplierInfo
-            : [contractData.suppliersInfo.supplierInfo];
+          const contractSuppliers = gd(contractData.suppliersInfo.supplierInfo);
 
           contractSuppliers.forEach((s) => {
             const supplier = new Organization();
@@ -167,10 +200,7 @@ export class ExtractFileProcessor {
 
         const products: Array<Product> = [];
 
-        const contractProducts = Array.isArray(contractData.products.product)
-          ? contractData.products.product
-          : [contractData.products.product];
-
+        const contractProducts = gd(contractData.products.product);
         contractProducts.forEach((p) => {
           const product = new Product();
 
@@ -193,11 +223,7 @@ export class ExtractFileProcessor {
         const stages: Array<Stage> = [];
         const finances: Array<Finance> = [];
 
-        const contractStages = Array.isArray(
-          contractData.executionPeriod.stages,
-        )
-          ? contractData.executionPeriod.stages
-          : [contractData.executionPeriod.stages];
+        const contractStages = gd(contractData.executionPeriod.stages);
 
         contractStages.forEach((s) => {
           const stage = new Stage();
@@ -214,16 +240,12 @@ export class ExtractFileProcessor {
         });
 
         if (contractData.finances.financingPlan) {
-          const contractFinanceStages = Array.isArray(
+          const contractFinanceStages = gd(
             contractData.finances.financingPlan.stages,
-          )
-            ? contractData.finances.financingPlan.stages
-            : [contractData.finances.financingPlan.stages];
+          );
 
           contractFinanceStages.forEach((s) => {
-            const contractPayments =
-              s.payments &&
-              (Array.isArray(s.payments) ? s.payments : [s.payments]);
+            const contractPayments = s.payments && gd(s.payments);
 
             contractPayments?.forEach((f) => {
               const finance = new Finance();
@@ -244,6 +266,7 @@ export class ExtractFileProcessor {
         await this.financeRepository.save(finances);
       }
     } catch (error) {
+      // TODO: remove after tests
       console.log({ msg: data.fileName });
       console.log({ error });
 

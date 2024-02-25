@@ -26,8 +26,8 @@ export class Acceptance {
   @Column({ type: 'decimal', nullable: true })
   totalPaymentAmount?: string;
 
-  @Column({ type: 'timestamp' })
-  deliveryAcceptDate!: Date;
+  @Column({ type: 'timestamp', nullable: false })
+  deliveryAcceptDate?: Date;
 
   @Column({ type: 'timestamp' })
   publishDate!: Date;
