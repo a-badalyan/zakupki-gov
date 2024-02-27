@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Stage } from './stage.entity';
 import { IAttachment } from '@app/types/contractProcedure';
+import { Payment } from './payment.entity';
 
 @Entity({ name: 'acceptances' })
 export class Acceptance {
@@ -17,20 +18,23 @@ export class Acceptance {
   documentNum!: string;
 
   @Column({ type: 'decimal', nullable: true })
-  fulfilmentSum?: string;
+  fulfillmentSum?: string;
 
-  @Column({ type: 'jsonb', array: true, default: [] })
-  receiptDocuments!: Array<IAttachment>;
+  @Column({ type: 'jsonb', array: false, nullable: true })
+  receiptDocuments?: Array<Omit<IAttachment, 'cryptoSigns'>>;
 
   // TODO: need ?
   @Column({ type: 'decimal', nullable: true })
   totalPaymentAmount?: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp', nullable: true })
   deliveryAcceptDate?: Date;
 
   @Column({ type: 'timestamp' })
   publishDate!: Date;
+
+  @ManyToOne(() => Payment, ({ sid }) => sid, { cascade: true })
+  payment!: Payment;
 
   @ManyToOne(() => Stage, ({ sid }) => sid, { cascade: true })
   stage!: Stage;

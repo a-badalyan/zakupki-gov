@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { Stage } from './stage.entity';
+import { Acceptance } from './acceptance.entity';
 
 @Entity({ name: 'payments' })
 export class Payment {
@@ -26,6 +27,9 @@ export class Payment {
 
   @Column({ type: 'timestamp' })
   publishDate!: Date;
+
+  @OneToMany(() => Acceptance, ({ payment }) => payment)
+  acceptances!: Array<Acceptance>;
 
   @ManyToOne(() => Stage, ({ sid }) => sid, { cascade: true })
   stage!: Stage;

@@ -1,4 +1,4 @@
-import { OnQueueActive, OnQueueCompleted } from '@nestjs/bull';
+import { OnQueueCompleted, OnQueueFailed } from '@nestjs/bull';
 import { Job } from 'bullmq';
 
 export abstract class AbstractJobProcessor {
@@ -12,13 +12,12 @@ export abstract class AbstractJobProcessor {
     });
   }
 
-  @OnQueueActive()
-  failed(job: Job) {
+  @OnQueueFailed()
+  failed(job: Job, err: Error) {
     console.log({
-      msg: 'processing_job',
+      msg: 'failed_job',
       jobName: job.name,
-      jobId: job.id,
-      body: job.data,
+      error: err.message,
     });
   }
 }

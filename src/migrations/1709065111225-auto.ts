@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Auto1708464080521 implements MigrationInterface {
-  name = 'Auto1708464080521';
+export class Auto1709065111225 implements MigrationInterface {
+  name = 'Auto1709065111225';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -26,7 +26,7 @@ export class Auto1708464080521 implements MigrationInterface {
       `CREATE TABLE "stages" ("sid" text NOT NULL, "startDate" text NOT NULL, "endDate" text NOT NULL, "stagePrice" text NOT NULL, "stageAdvancePaymentSum" text NOT NULL, "contractRegNum" text, CONSTRAINT "PK_3f7336276905c5b11f9f41fdc92" PRIMARY KEY ("sid"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "acceptances" ("sid" text NOT NULL, "name" text NOT NULL, "documentDate" TIMESTAMP NOT NULL, "documentNum" text NOT NULL, "fulfilmentSum" numeric, "receiptDocuments" jsonb array NOT NULL DEFAULT '{}', "totalPaymentAmount" numeric, "deliveryAcceptDate" TIMESTAMP NOT NULL, "publishDate" TIMESTAMP NOT NULL, "stageSid" text, CONSTRAINT "PK_5cd23d06102060c8057dcfb715f" PRIMARY KEY ("sid"))`,
+      `CREATE TABLE "acceptances" ("sid" text NOT NULL, "name" text NOT NULL, "documentDate" TIMESTAMP NOT NULL, "documentNum" text NOT NULL, "fulfillmentSum" numeric, "receiptDocuments" jsonb, "totalPaymentAmount" numeric, "deliveryAcceptDate" TIMESTAMP, "publishDate" TIMESTAMP NOT NULL, "paymentSid" text, "stageSid" text, CONSTRAINT "PK_5cd23d06102060c8057dcfb715f" PRIMARY KEY ("sid"))`,
     );
     await queryRunner.query(
       `ALTER TABLE "products" ADD CONSTRAINT "FK_fd3e1cd09fa3e3754bec2c1f7dc" FOREIGN KEY ("contractRegNum") REFERENCES "contracts"("regNum") ON DELETE NO ACTION ON UPDATE NO ACTION`,
@@ -47,6 +47,9 @@ export class Auto1708464080521 implements MigrationInterface {
       `ALTER TABLE "stages" ADD CONSTRAINT "FK_0b65579a3f1424cca05ef3f223c" FOREIGN KEY ("contractRegNum") REFERENCES "contracts"("regNum") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
+      `ALTER TABLE "acceptances" ADD CONSTRAINT "FK_ada10cd93d16036d6b5080dc2e7" FOREIGN KEY ("paymentSid") REFERENCES "payments"("sid") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "acceptances" ADD CONSTRAINT "FK_87f71265384bf780a2ab16643fd" FOREIGN KEY ("stageSid") REFERENCES "stages"("sid") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
   }
@@ -54,6 +57,9 @@ export class Auto1708464080521 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `ALTER TABLE "acceptances" DROP CONSTRAINT "FK_87f71265384bf780a2ab16643fd"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "acceptances" DROP CONSTRAINT "FK_ada10cd93d16036d6b5080dc2e7"`,
     );
     await queryRunner.query(
       `ALTER TABLE "stages" DROP CONSTRAINT "FK_0b65579a3f1424cca05ef3f223c"`,

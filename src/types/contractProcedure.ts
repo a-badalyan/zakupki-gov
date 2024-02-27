@@ -6,7 +6,7 @@ export interface IContractProcedure {
       regNum: IRegNum;
       publishDate: IPublishDate;
       versionNumber: IVersionNumber;
-      executions: IExecutions;
+      executions?: IExecutions;
       printForm: IPrintForm;
       currentContractStage: ICurrentContractStage;
       okpd2okved2: IOkpd2okved2;

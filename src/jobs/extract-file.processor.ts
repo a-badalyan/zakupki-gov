@@ -19,7 +19,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { xml2json } from 'xml-js';
 import { IContract } from '@app/types/contract';
-import { IAttachment, IContractProcedure } from '@app/types/contractProcedure';
+import { IContractProcedure } from '@app/types/contractProcedure';
 import { writeFileSync } from 'fs';
 import { gd } from '@app/utils/gd';
 
@@ -75,8 +75,14 @@ export class ExtractFileProcessor {
         const contractProcedure =
           parsedXml['ns3:export']['ns3:contractProcedure'];
 
+        // Дополнительные соглашения
+        if (!contractProcedure.executions) return;
+
+        // может быть еще oldStage (исполнение старых контрактов)
+        const stageSid = contractProcedure.executions.stage.sid.value;
+
         const currentStage = await this.stageRepository.findOneBy({
-          sid: contractProcedure.executions.stage.sid.value,
+          sid: stageSid,
         });
 
         if (!currentStage) return;
@@ -84,27 +90,24 @@ export class ExtractFileProcessor {
         const acceptances: Array<Acceptance> = [];
         const payments: Array<Payment> = [];
 
-        // const existedContract = await this.contractRepository.findOneBy({
-        //   regNum: contractProcedure.regNum.value,
-        // });
-
-        // if (!existedContract) return;
-
         const executions = gd(contractProcedure.executions.execution);
 
         executions.forEach((execution) => {
           const { docAcceptance, payDoc } = execution;
 
           if (docAcceptance) {
-            const attachments: Array<IAttachment> = [];
+            const attachments =
+              docAcceptance.receiptDocuments &&
+              gd(docAcceptance.receiptDocuments.attachment).map(
+                ({ cryptoSigns, ...rest }) => rest,
+              );
 
             const acceptance = new Acceptance();
-
             acceptance.sid = docAcceptance.sid.value;
             acceptance.name = docAcceptance.name.value;
             acceptance.documentDate = docAcceptance.documentDate.value;
             acceptance.documentNum = docAcceptance.documentNum.value;
-            acceptance.fulfilmentSum = docAcceptance.fulfilmentSum?.value;
+            acceptance.fulfillmentSum = docAcceptance.fulfilmentSum?.value;
             acceptance.receiptDocuments = attachments;
             acceptance.totalPaymentAmount =
               docAcceptance.totalPaymentAmount?.value;
@@ -117,8 +120,29 @@ export class ExtractFileProcessor {
           }
 
           if (payDoc) {
-            const payment = new Payment();
+            const paidAcceptances =
+              payDoc.payDocTypeInfo?.docAcceptancePayDoc
+                ?.payDocToDocAcceptanceCompliances.docAcceptance &&
+              gd(
+                payDoc.payDocTypeInfo?.docAcceptancePayDoc
+                  ?.payDocToDocAcceptanceCompliances.docAcceptance,
+              );
 
+            const acceptances: Array<Acceptance> = [];
+
+            paidAcceptances?.forEach((a) => {
+              const acceptance = new Acceptance();
+              acceptance.sid = a.sid.value;
+              acceptance.name = a.name.value;
+              acceptance.documentDate = a.documentDate.value;
+              acceptance.documentNum = a.documentNum.value;
+              acceptance.publishDate = contractProcedure.publishDate.value;
+              acceptance.stage = currentStage;
+
+              acceptances.push(acceptance);
+            });
+
+            const payment = new Payment();
             payment.sid = payDoc.sid.value;
             payment.documentName = payDoc.documentName.value;
             payment.documentNum = payDoc.documentNum.value;
@@ -131,10 +155,14 @@ export class ExtractFileProcessor {
               execution.improperExecutionText?.value;
             payment.publishDate = contractProcedure.publishDate.value;
             payment.stage = currentStage;
+            payment.acceptances = acceptances;
 
             payments.push(payment);
           }
         });
+
+        await this.acceptanceRepository.save(acceptances);
+        await this.paymentRepository.save(payments);
       }
 
       if ('ns3:contract' in parsedXml['ns3:export']) {
@@ -180,16 +208,14 @@ export class ExtractFileProcessor {
         customer.fullName = contractData.customer.fullName.value;
         customer.shortName = contractData.customer.shortName?.value;
 
-        await this.organizationRepository.upsert([...suppliers, customer], {
-          conflictPaths: ['inn'],
-        });
+        await this.organizationRepository.save([...suppliers, customer]);
 
         const contract = new Contract();
         contract.regNum = contractData.regNum.value;
         contract.name = contractData.contractSubject.value;
-        contract.number = contractData.number.value;
+        contract.number = contractData.number?.value ?? 'б/н';
         contract.signDate = contractData.signDate.value;
-        contract.price = contractData.priceInfo.price.value;
+        contract.price = contractData.priceInfo?.price.value ?? '0.00';
         contract.executionStartedAt =
           contractData.executionPeriod.startDate.value;
         contract.executionEndedAt = contractData.executionPeriod.endDate.value;
@@ -227,7 +253,6 @@ export class ExtractFileProcessor {
 
         contractStages.forEach((s) => {
           const stage = new Stage();
-
           stage.sid = s.sid.value;
           stage.startDate = s.startDate.value;
           stage.endDate = s.endDate.value;

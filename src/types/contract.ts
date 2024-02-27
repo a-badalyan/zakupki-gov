@@ -14,12 +14,12 @@ export interface IContract {
       finances: IFinances;
       signDate: ISignDate;
       regNum: IRegNum;
-      number: INumber;
+      number?: INumber;
       contractSubject: IContractSubject;
       isOptimyStart: IIsOptimyStart;
       contractLifeCycle: IContractLifeCycle;
       isResidentialPremisesPurchase: IIsResidentialPremisesPurchase;
-      priceInfo: IPriceInfo;
+      priceInfo?: IPriceInfo;
       executionPeriod: IExecutionPeriod;
       deliveryPlaceInfo: IDeliveryPlaceInfo;
       products: IProducts;
